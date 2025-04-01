@@ -2,11 +2,11 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet">
-  <title>Fisheye - photographe </title>
-  <link rel="stylesheet" href="./css/photographer.css">
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet" />
+  <title>Fisheye - photographe</title>
+  <link rel="stylesheet" href="./css/photographer.css" />
 </head>
 
 <body>
@@ -15,11 +15,13 @@
   </header>
   <main id="main">
     <div class="photograph-header">
-      <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
+      <button class="contact_button" onclick="displayModal()">
+        Contactez-moi
+      </button>
     </div>
     <section id="photograph-work">
       <div class="sorting">
-        <p>Trier par </p>
+        <p>Trier par</p>
         <select id="sort">
           <option value="popular">Popularité</option>
           <option value="date">Date</option>
@@ -44,8 +46,7 @@
       </form>
     </div>
   </div>
-  <script src="/scripts/pages/photographer.js"></script>
-  <script src="/scripts/utils/contactForm.js"></script>
+  <script type="module" src="./scripts/app.js"></script>
 </body>
 
 </html>
