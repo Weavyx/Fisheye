@@ -17,5 +17,6 @@ export class Media {
       this.isImage = false;
       this.isVideo = true;
     }
+    this.isLiked = false; // État de like par défaut
   }
 }

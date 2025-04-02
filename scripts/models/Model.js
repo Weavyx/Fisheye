@@ -2,10 +2,36 @@ import { Photographer } from "./Photographer.js";
 import { Media } from "./Media.js";
 
 export class Model {
+  constructor() {
+    this.photographers = []; // Propriété pour stocker les photographes
+  }
   //    Helpers
   handleError(error, defaultValue = []) {
-    console.error(error.message); // Log l'erreur pour le débogage
     return defaultValue; // Retourne une valeur par défaut (ex. : tableau vide)
+  }
+  incrementLikes(media, photographer) {
+    media.isLiked = true;
+    media.likes++;
+    photographer.totalLikes++;
+  }
+
+  decrementLikes(media, photographer) {
+    media.isLiked = false;
+    media.likes--;
+    photographer.totalLikes--;
+  }
+
+  sortMedia(media, sortBy) {
+    switch (sortBy) {
+      case "popularite":
+        return media.sort((a, b) => b.likes - a.likes); // Tri par popularité (likes décroissants)
+      case "date":
+        return media.sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date (décroissant)
+      case "titre":
+        return media.sort((a, b) => a.title.localeCompare(b.title)); // Tri par titre (alphabétique)
+      default:
+        return media; // Pas de tri
+    }
   }
 
   //   Methods
@@ -72,7 +98,7 @@ export class Model {
     });
   }
 
-  getPhotographerMedia(id) {
+  getPhotographerMediaAndTotalLikes(id) {
     return this.getData().then((data) => {
       if (!data.media) {
         throw new Error(
@@ -87,51 +113,24 @@ export class Model {
             `getPhotographerMedia : Aucun média trouvé pour le photographe avec l'ID ${id}.`
           );
         } else {
-          return media
-            .map((media) => new Media(media))
-            .sort((a, b) => {
-              if (a.likes === b.likes) {
-                return a.title.localeCompare(b.title); // Trie par titre si les likes sont égaux
-              } else {
-                return b.likes - a.likes; // Trie par likes décroissants
-              }
-            }); // Retourne un tableau d'objets Media triés par likes
+          const sortedMedia = this.sortMedia(
+            media.map((media) => new Media(media)),
+            "popularite"
+          ); // Tri par popularité
+          const totalLikes = sortedMedia.reduce(
+            (acc, media) => acc + media.likes,
+            0
+          ); // Calcul du total des likes
+          return {
+            media: sortedMedia,
+            totalLikes,
+          }; // Retourne un objet avec les médias et le total des likes
         }
       }
     });
   }
-  // Retourne un objet avec le total des likes des media et photographer.price
-  getPhotographerPriceAndTotalLikes(id) {
-    return this.getData().then((data) => {
-      if (!data.media) {
-        throw new Error(
-          "getPhotographerPriceAndTotalLikes : Les données des médias sont introuvables ou mal formatées dans photographers.json."
-        );
-      } else {
-        const media = data.media.filter(
-          (media) => media.photographerId === parseInt(id)
-        );
-        if (!media || media.length === 0) {
-          throw new Error(
-            `getPhotographerPriceAndTotalLikes : Aucun média trouvé pour le photographe avec l'ID ${id}.`
-          );
-        } else {
-          const totalLikes = media.reduce((acc, media) => acc + media.likes, 0);
-          const photographer = data.photographers.find(
-            (photographer) => photographer.id === parseInt(id)
-          );
-          if (!photographer) {
-            throw new Error(
-              `getPhotographerPriceAndTotalLikes : Photographe avec l'ID ${id} introuvable.`
-            );
-          } else {
-            return {
-              price: photographer.price,
-              totalLikes: totalLikes,
-            }; // Retourne un objet avec le prix et le total des likes
-          }
-        }
-      }
-    });
+
+  updatePhotographerTotalLikesParam(photographer, totalLikes) {
+    photographer.totalLikes = totalLikes; // Met à jour le total des likes du photographe
   }
 }

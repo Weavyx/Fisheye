@@ -2,6 +2,8 @@ export class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
+    this.view.controller = this;
+    this.view.model = this.model;
   }
 
   RenderIndex() {
@@ -19,26 +21,29 @@ export class Controller {
 
   RenderPhotographer(id) {
     this.model.getPhotographer(id).then((photographer) => {
-      const photographerBanner = document.querySelector(".photograph-header");
-      photographerBanner.prepend(
-        this.view.createPhotographerBannerLeftComponent(photographer)
-      );
-      photographerBanner.append(
-        this.view.createPhotographerBannerRightComponent(photographer)
-      );
-    });
+      // Récupérer et afficher la bannière du photographe
+      this.view.renderPhotographerBanner(photographer);
 
-    this.model.getPhotographerMedia(id).then((media) => {
-      const worksContainer = document.querySelector(".work-container");
-      media.forEach((work) => {
-        worksContainer.appendChild(this.view.createPhotographerMediaCard(work));
+      // Charger les médias du photographe
+      this.model.getPhotographerMediaAndTotalLikes(id).then((data) => {
+        // Mettre à jour le total des likes du photographe
+        const { media, totalLikes } = data;
+        this.model.updatePhotographerTotalLikesParam(photographer, totalLikes);
+        // Charger les informations de prix et de likes totaux
+        this.view.renderStickyInfoBox(
+          photographer.price,
+          photographer.totalLikes
+        );
+
+        // Charger et afficher les médias du photographe
+        this.view.renderPhotographerMedia(media, photographer);
+
+        // Ajouter un evenement de tri
+        this.view.addSortEvent(media, photographer);
+
+        // Ajouter un evement pour la modale
+        this.view.addModalEvent();
       });
-    });
-
-    this.model.getPhotographerPriceAndTotalLikes(id).then((data) => {
-      document
-        .querySelector("body")
-        .append(this.view.createStickyInfoBox(data.price, data.totalLikes));
     });
   }
 }

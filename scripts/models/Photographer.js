@@ -8,5 +8,6 @@ export class Photographer {
     this.price = data.price;
     this.portrait = data.portrait;
     this.media = [];
+    this.totalLikes = null; // Nombre total de likes
   }
 }

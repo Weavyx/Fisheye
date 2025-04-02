@@ -21,7 +21,7 @@
   gap: 67.12px;
 }
 
-#sticky-info-box .total-likes {
+#sticky-info-box .likes-container {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -48,15 +48,6 @@
   font-size: 24px;
   line-height: 1;
   letter-spacing: 0;
-}
-
-header {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: start;
-  height: 90px;
-  padding-top: 42px;
 }
 
 .logo {
@@ -257,6 +248,15 @@ h1 {
 
 #contact_modal {
   display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal {
@@ -272,18 +272,21 @@ h1 {
 }
 
 .modal header {
+  display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
 .modal header img {
   cursor: pointer;
+  width: 42px;
+  height: 42px;
 }
 
 .modal header h2 {
   font-size: 64px;
   font-weight: normal;
-  text-align: center;
+  text-align: start;
 }
 
 form {

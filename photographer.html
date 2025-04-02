@@ -22,10 +22,10 @@
     <section id="photograph-work">
       <div class="sorting">
         <p>Trier par</p>
-        <select id="sort">
-          <option value="popular">Popularité</option>
+        <select id="sort-select">
+          <option value="popularite">Popularité</option>
           <option value="date">Date</option>
-          <option value="title">Titre</option>
+          <option value="titre">Titre</option>
         </select>
       </div>
       <div class="work-container"></div>
@@ -34,13 +34,19 @@
   <div id="contact_modal">
     <div class="modal">
       <header>
-        <h2>Contactez-moi</h2>
-        <img src="assets/icons/close.svg" onclick="closeModal()" />
+        <h2 class="photographer-name">Contactez-moi</h2>
+        <img src="assets/icons/close.svg" class="close-button">
       </header>
-      <form>
+      <form id="contact_form" method="POST">
         <div>
           <label>Prénom</label>
-          <input />
+          <input type="text" name="prenom" id="prenom">
+          <label>Nom</label>
+          <input type="text" name="nom" id="nom">
+          <label>Email</label>
+          <input type="email" name="email" id="email">
+          <label>Votre message</label>
+          <textarea name="message" id="message" rows="5"></textarea>
         </div>
         <button class="contact_button">Envoyer</button>
       </form>
