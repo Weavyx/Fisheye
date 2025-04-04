@@ -1,22 +1,33 @@
-import { Model } from "./models/Model.js";
-import { View } from "./views/View.js";
-import { Controller } from "./controller/Controller.js";
+/**
+ * Initialise l'application en fonction de la page actuelle.
+ * Détecte la page et appelle les méthodes appropriées du contrôleur.
+ *
+ * @module App
+ */
+import { AppModel } from "./models/Model.js";
+import { AppView } from "./views/View.js";
+import { AppController } from "./controller/Controller.js";
 
 // Initialisation du contrôleur
-const app = new Controller(new Model(), new View());
+const app = new AppController(new AppModel(), new AppView());
 
 // Détection de la page actuelle
-const currentPage = window.location.pathname;
+const CURRENT_PAGE = window.location.pathname;
 
-// Attendre le chargement complet du DOM avant d'exécuter le code
+/**
+ * Exécute le code après le chargement complet du DOM.
+ *
+ * @event DOMContentLoaded
+ */
 document.addEventListener("DOMContentLoaded", () => {
-  if (currentPage.includes("index.html") || currentPage === "/") {
-    // Page d'accueil
-    app.RenderIndex();
-  } else if (currentPage.includes("photographer.html")) {
+  if (CURRENT_PAGE.includes("index.html") || CURRENT_PAGE === "/") {
+    app.renderHomePage(); // Renommé pour refléter son rôle
+  } else if (CURRENT_PAGE.includes("photographer.html")) {
     const urlParams = new URLSearchParams(window.location.search);
-    const photographerId = urlParams.get("id"); // Récupère la valeur de "id"
-    // Page de détails d'un photographe
-    app.RenderPhotographer(photographerId);
+    const photographerId = urlParams.get("id");
+    app.renderPhotographerPage(photographerId); // Renommé pour refléter son rôle
+
+    // Attacher les événements de la lightbox
+    app.view.attachLightboxEvents();
   }
 });

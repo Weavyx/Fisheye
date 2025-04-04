@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
   <meta charset="utf-8" />
@@ -11,33 +11,36 @@
 
 <body>
   <header>
-    <img src="assets/images/logo.png" class="logo" />
+    <a href="index.html" aria-label="Retour à la page d'accueil">
+      <img src="assets/images/logo.png" class="logo" alt="Logo de Fisheye" />
+    </a>
   </header>
   <main id="main">
-    <div class="photograph-header">
-      <button class="contact_button" onclick="displayModal()">
+    <section class="photograph-header" aria-labelledby="photograph-header-title">
+      <h1 id="photograph-header-title" class="sr-only">Détails du photographe</h1>
+      <button class="contact_button" onclick="displayModal()" aria-label="Ouvrir le formulaire de contact">
         Contactez-moi
       </button>
-    </div>
-    <section id="photograph-work">
-      <div class="sorting">
-        <p>Trier par</p>
-        <select id="sort-select">
+    </section>
+    <section id="photograph-work" aria-label="Galerie des travaux du photographe">
+      <div class="sorting" aria-label="Options de tri">
+        <label for="sort-select">Trier par</label>
+        <select id="sort-select" aria-label="Trier les médias">
           <option value="popularite">Popularité</option>
           <option value="date">Date</option>
           <option value="titre">Titre</option>
         </select>
       </div>
-      <div class="work-container"></div>
+      <div class="work-container" role="list"></div>
     </section>
   </main>
-  <div id="contact_modal">
+  <div id="contact_modal" role="dialog" aria-labelledby="contact-modal-title" aria-hidden="true">
     <div class="modal">
       <header>
-        <h2 class="photographer-name">Contactez-moi</h2>
-        <img src="assets/icons/close.svg" class="close-button">
+        <h2 id="contact-modal-title" class="photographer-name">Contactez-moi</h2>
+        <img src="assets/icons/close.svg" class="close-button" alt="Fermer le formulaire" role="button" tabindex="0">
       </header>
-      <form id="contact_form" method="POST">
+      <form id="contact_form" method="POST" aria-label="Formulaire de contact">
         <div>
           <label>Prénom</label>
           <input type="text" name="prenom" id="prenom">
@@ -52,6 +55,15 @@
       </form>
     </div>
   </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="lightbox-close" aria-label="Fermer la lightbox">&times;</button>
+    <button class="lightbox-prev" aria-label="Média précédent">&#10094;</button>
+    <div class="lightbox-content"></div>
+    <button class="lightbox-next" aria-label="Média suivant">&#10095;</button>
+  </div>
+
   <script type="module" src="./scripts/app.js"></script>
 </body>
 

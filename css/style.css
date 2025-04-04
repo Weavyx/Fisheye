@@ -134,3 +134,21 @@ h1 {
   margin-top: 3px;
   height: 12px;
 }
+
+.photographer-card {
+  cursor: pointer;
+}
+
+.photographer-card:focus {
+  outline: 2px solid #901c1c;
+  outline-offset: 2px;
+}
+
+.media {
+  cursor: pointer;
+}
+
+.media:focus {
+  outline: 2px solid #901c1c;
+  outline-offset: 2px;
+}
