@@ -41,18 +41,19 @@ export class AppController {
           ".photographer_section"
         );
         photographerList.forEach((photographerInfo) => {
+          console.log("Photographer data:", photographerInfo);
           photographersSectionElement.appendChild(
-            this.view.createPhotographerCard(photographerInfo)
+            this.view.factoryManager.create(
+              "photographerCard",
+              photographerInfo
+            )
           );
         });
       })
       .catch((error) => {
         console.error(
-          "Erreur lors du rendu de la page d'accueil :",
+          "Une erreur est survenue lors du chargement des données. Veuillez réessayer plus tard.",
           error.message
-        );
-        this.view.displayErrorMessage(
-          "Une erreur est survenue lors du chargement des données. Veuillez réessayer plus tard."
         );
       });
   }
@@ -104,11 +105,13 @@ export class AppController {
    * @returns {void}
    */
   openMediaLightbox(mediaData) {
-    const lightbox = document.getElementById("lightbox");
+    // Vérifier si la lightbox existe déjà dans le DOM
+    let lightbox = document.getElementById("lightbox");
 
     if (!lightbox) {
-      console.error("Lightbox introuvable dans le DOM.");
-      return;
+      // Si la lightbox n'existe pas, la créer via la vue
+      this.view.renderLightboxMedia(mediaData);
+      lightbox = document.getElementById("lightbox");
     }
 
     if (!this.mediaList || this.mediaList.length === 0) {
@@ -116,6 +119,7 @@ export class AppController {
       return;
     }
 
+    // Afficher le média dans la lightbox
     this.view.renderLightboxMedia(mediaData);
 
     this.currentMediaIndex = this.mediaList.findIndex(

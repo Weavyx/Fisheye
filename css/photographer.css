@@ -50,6 +50,13 @@
   letter-spacing: 0;
 }
 
+#sticky-info-box .photographer-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+}
+
 .logo {
   height: 50px;
   margin-left: 100px;
@@ -105,7 +112,7 @@ h1 {
   letter-spacing: 0;
 }
 
-.photograph-header .contact_button {
+.photograph-header .open-contact_button {
   color: white;
   padding: 11px;
   width: 170px;

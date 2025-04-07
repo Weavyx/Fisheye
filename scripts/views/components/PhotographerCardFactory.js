@@ -1,4 +1,5 @@
 export function createPhotographerCard(data) {
+  console.log("Creating Photographer Card with data:", data);
   const { name, id, city, country, tagline, price, portrait } = data;
   const cardElement = document.createElement("article");
   cardElement.classList.add("photographer-card");
