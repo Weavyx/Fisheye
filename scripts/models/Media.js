@@ -20,7 +20,7 @@ export class Media {
     this.photographerId = data.photographerId;
     this.title = data.title;
     this.likes = data.likes;
-    this.date = data.date;
+    this.date = new Date(data.date); // Conversion de la date en objet Date
     this.price = data.price;
 
     // On vérifie si l'élément contient une image ou une vidéo
@@ -33,6 +33,27 @@ export class Media {
       this.isImage = false;
       this.isVideo = true;
     }
+
     this.isLiked = false; // État de like par défaut
+  }
+
+  /**
+   * Incrémente le nombre de likes pour ce média.
+   *
+   * @returns {void}
+   */
+  incrementLikes() {
+    this.likes += 1;
+    this.isLiked = true;
+  }
+
+  /**
+   * Décrémente le nombre de likes pour ce média.
+   *
+   * @returns {void}
+   */
+  decrementLikes() {
+    this.likes -= 1;
+    this.isLiked = false;
   }
 }

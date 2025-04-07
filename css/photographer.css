@@ -391,3 +391,26 @@ form input {
   outline: 2px solid white;
   outline-offset: 2px;
 }
+
+/* Appliquer les mêmes styles pour :hover et :focus */
+#sort-select:hover,
+#sort-select:focus {
+  outline: none; /* Supprime le contour par défaut */
+  border: 2px solid #901c1c; /* Ajoute une bordure pour indiquer la sélection */
+  background-color: #f8f8f8; /* Change la couleur de fond pour correspondre au hover */
+  color: #333; /* Change la couleur du texte si nécessaire */
+}
+
+/* Style de base pour le message d'erreur */
+.error-message {
+  color: #d9534f; /* Rouge pour signaler une erreur */
+  background-color: #f8d7da; /* Fond clair pour une meilleure lisibilité */
+  border: 1px solid #f5c6cb; /* Bordure pour délimiter le message */
+  padding: 15px; /* Espacement interne pour un affichage propre */
+  margin: 20px auto; /* Espacement externe pour centrer le message */
+  text-align: center; /* Centrer le texte */
+  font-size: 1.2em; /* Taille de police légèrement augmentée */
+  border-radius: 5px; /* Coins arrondis pour un design moderne */
+  max-width: 600px; /* Limite la largeur pour un affichage optimal */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour un effet visuel */
+}

@@ -7,125 +7,121 @@ import { Media } from "./Media.js";
  */
 export class AppModel {
   constructor() {
-    this.photographers = []; // Propriété pour stocker les photographes
+    if (AppModel.instance) {
+      return AppModel.instance;
+    }
+    this.photographers = [];
+    AppModel.instance = this;
   }
 
   // Section: Méthodes de gestion des données
   /**
-   * Récupère les données depuis le fichier JSON.
+   * Récupère les données depuis le fichier JSON et informe l'utilisateur en cas d'erreur.
    *
-   * @async
-   * @returns {Promise<Object>} Les données JSON.
+   * @returns {Promise<Object>} Les données JSON ou une erreur.
    */
-  async fetchData() {
-    try {
-      const response = await fetch("../../data/photographers.json");
-      if (!response.ok) {
-        throw new Error(
-          "fetchData : Erreur réseau - impossible de récupérer le fichier photographers.json. Vérifiez que le fichier existe et que le serveur est accessible."
+  fetchData() {
+    return fetch("../../data/photographers.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "fetchData : Erreur réseau - impossible de récupérer le fichier photographers.json."
+          );
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        console.error(
+          "Erreur lors de la récupération des données :",
+          error.message
         );
-      }
-      const data = await response.json();
-      if (!data) {
-        throw new Error(
-          "fetchData : Erreur critique - les données n'ont pas pu être chargées. Veuillez réessayer plus tard."
-        );
-      }
-      return data;
-    } catch (error) {
-      return this.handleFetchError(error);
-    }
+        throw error; // Relance l'erreur pour une gestion ultérieure par le contrôleur
+      });
   }
 
   /**
    * Récupère tous les photographes.
    *
-   * @async
-   * @returns {Promise<Array<Photographer>>} Un tableau d'objets Photographer.
+   * @returns {Promise<Array<Photographer>>} Un tableau d'objets Photographer ou une erreur.
    */
-  async fetchPhotographers() {
-    try {
-      const data = await this.fetchData();
-      if (!data.photographers) {
-        throw new Error(
-          "fetchPhotographers : Les données des photographes sont introuvables ou mal formatées dans photographers.json."
+  fetchPhotographers() {
+    return this.fetchData()
+      .then((data) => {
+        if (!data.photographers) {
+          throw new Error(
+            "fetchPhotographers : Les données des photographes sont introuvables ou mal formatées dans photographers.json."
+          );
+        }
+        return data.photographers.map(
+          (photographer) => new Photographer(photographer)
         );
-      }
-      return data.photographers.map(
-        (photographer) => new Photographer(photographer)
-      );
-    } catch (error) {
-      return this.handleFetchError(error);
-    }
+      })
+      .catch((error) => this.handleFetchError(error));
   }
 
   /**
    * Récupère un photographe par son ID.
    *
-   * @async
    * @param {number|string} id - L'ID du photographe.
-   * @returns {Promise<Photographer>} Un objet Photographer.
+   * @returns {Promise<Photographer>} Un objet Photographer ou une erreur.
    */
-  async fetchPhotographerById(id) {
-    try {
-      const data = await this.fetchData();
-      if (!data.photographers) {
-        throw new Error(
-          "fetchPhotographerById : Les données des photographes sont introuvables ou mal formatées dans photographers.json."
+  fetchPhotographerById(id) {
+    return this.fetchData()
+      .then((data) => {
+        if (!data.photographers) {
+          throw new Error(
+            "fetchPhotographerById : Les données des photographes sont introuvables ou mal formatées dans photographers.json."
+          );
+        }
+        const photographer = data.photographers.find(
+          (photographer) => photographer.id === parseInt(id)
         );
-      }
-      const photographer = data.photographers.find(
-        (photographer) => photographer.id === parseInt(id)
-      );
-      if (!photographer) {
-        throw new Error(
-          `fetchPhotographerById : Photographe avec l'ID ${id} introuvable.`
-        );
-      }
-      return new Photographer(photographer);
-    } catch (error) {
-      return this.handleFetchError(error);
-    }
+        if (!photographer) {
+          throw new Error(
+            `fetchPhotographerById : Photographe avec l'ID ${id} introuvable.`
+          );
+        }
+        return new Photographer(photographer);
+      })
+      .catch((error) => this.handleFetchError(error));
   }
 
   /**
    * Récupère les médias d'un photographe et calcule le total des likes.
    *
-   * @async
    * @param {number|string} photographerId - L'ID du photographe.
-   * @returns {Promise<Object>} Un objet contenant les médias triés et le total des likes.
+   * @returns {Promise<Object>} Un objet contenant les médias triés et le total des likes ou une erreur.
    */
-  async fetchPhotographerMediaAndLikes(photographerId) {
-    try {
-      const data = await this.fetchData();
-      if (!data.media) {
-        throw new Error(
-          "fetchPhotographerMediaAndLikes : Les données des médias sont introuvables ou mal formatées dans photographers.json."
+  fetchPhotographerMediaAndLikes(photographerId) {
+    return this.fetchData()
+      .then((data) => {
+        if (!data.media) {
+          throw new Error(
+            "fetchPhotographerMediaAndLikes : Les données des médias sont introuvables ou mal formatées dans photographers.json."
+          );
+        }
+        const mediaList = data.media.filter(
+          (mediaData) => mediaData.photographerId === parseInt(photographerId)
         );
-      }
-      const mediaList = data.media.filter(
-        (mediaData) => mediaData.photographerId === parseInt(photographerId)
-      );
-      if (!mediaList || mediaList.length === 0) {
-        throw new Error(
-          `fetchPhotographerMediaAndLikes : Aucun média trouvé pour le photographe avec l'ID ${photographerId}.`
+        if (!mediaList || mediaList.length === 0) {
+          throw new Error(
+            `fetchPhotographerMediaAndLikes : Aucun média trouvé pour le photographe avec l'ID ${photographerId}.`
+          );
+        }
+        const sortedMediaList = this.sortMediaByCriteria(
+          mediaList.map((mediaData) => new Media(mediaData)),
+          "popularite"
         );
-      }
-      const sortedMediaList = this.sortMediaByCriteria(
-        mediaList.map((mediaData) => new Media(mediaData)),
-        "popularite"
-      );
-      const totalLikes = sortedMediaList.reduce(
-        (acc, mediaData) => acc + mediaData.likes,
-        0
-      );
-      return {
-        media: sortedMediaList,
-        totalLikes,
-      };
-    } catch (error) {
-      return this.handleFetchError(error);
-    }
+        const totalLikes = sortedMediaList.reduce(
+          (acc, mediaData) => acc + mediaData.likes,
+          0
+        );
+        return {
+          media: sortedMediaList,
+          totalLikes,
+        };
+      })
+      .catch((error) => this.handleFetchError(error));
   }
 
   // Section: Méthodes de manipulation des données
@@ -141,7 +137,7 @@ export class AppModel {
       case "popularite":
         return media.sort((a, b) => b.likes - a.likes); // Tri par popularité (likes décroissants)
       case "date":
-        return media.sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date (décroissant)
+        return media.sort((a, b) => b.date - a.date); // Tri par date (décroissant)
       case "titre":
         return media.sort((a, b) => a.title.localeCompare(b.title)); // Tri par titre (alphabétique)
       default:
@@ -161,29 +157,24 @@ export class AppModel {
   }
 
   /**
-   * Incrémente le compteur de likes pour un média.
+   * Gère le basculement des likes pour un média.
    *
    * @param {Object} media - Les données du média.
    * @param {Object} photographer - Les données du photographe.
    * @returns {void}
    */
-  incrementMediaLikes(media, photographer) {
-    media.isLiked = true;
-    media.likes++;
-    photographer.totalLikes++;
-  }
-
-  /**
-   * Décrémente le compteur de likes pour un média.
-   *
-   * @param {Object} media - Les données du média.
-   * @param {Object} photographer - Les données du photographe.
-   * @returns {void}
-   */
-  decrementMediaLikes(media, photographer) {
-    media.isLiked = false;
-    media.likes--;
-    photographer.totalLikes--;
+  toggleMediaLike(media, photographer) {
+    if (media.isLiked) {
+      // Décrémenter les likes si le média est déjà liké
+      media.isLiked = false;
+      media.likes--;
+      photographer.totalLikes--;
+    } else {
+      // Incrémenter les likes si le média n'est pas encore liké
+      media.isLiked = true;
+      media.likes++;
+      photographer.totalLikes++;
+    }
   }
 
   // Section: Méthodes utilitaires
@@ -197,5 +188,24 @@ export class AppModel {
   handleFetchError(error, defaultValue = []) {
     console.error("Erreur capturée :", error.message);
     return defaultValue; // Retourne une valeur par défaut (ex. : tableau vide)
+  }
+
+  /**
+   * Affiche un message d'erreur à l'utilisateur.
+   *
+   * @param {string} message - Le message d'erreur à afficher.
+   */
+  displayErrorMessage(message) {
+    const errorContainer = document.createElement("div");
+    errorContainer.classList.add("error-message");
+    errorContainer.textContent = message;
+
+    const mainElement = document.querySelector("main");
+    if (mainElement) {
+      mainElement.innerHTML = ""; // Vide le contenu existant
+      mainElement.appendChild(errorContainer);
+    } else {
+      document.body.appendChild(errorContainer);
+    }
   }
 }

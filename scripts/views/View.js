@@ -4,11 +4,86 @@
  */
 export class AppView {
   constructor() {
-    this.controller = null;
-    this.model = null;
+    if (AppView.instance) {
+      return AppView.instance;
+    }
+    this.eventManager = null;
+    AppView.instance = this;
   }
 
   // Section: Méthodes de rendu
+  /**
+   * Ajoute un gestionnaire générique pour les interactions clavier.
+   *
+   * @param {HTMLElement} element - L'élément HTML cible.
+   * @param {Function} action - La fonction à exécuter lorsque la touche Enter est pressée.
+   */
+  addKeyboardInteraction(element, action) {
+    element.setAttribute("tabindex", "0");
+    this.eventManager.addEvent(element, "keydown", (event) => {
+      if (event.key === "Enter") {
+        action();
+      }
+    });
+  }
+
+  /**
+   * Crée une carte générique pour un élément.
+   *
+   * @param {Object} data - Les données de l'élément.
+   * @param {string} type - Le type de carte ("photographer" ou "media").
+   * @returns {HTMLElement} L'élément HTML représentant la carte.
+   */
+  createCard(data, type) {
+    const cardElement = document.createElement("article");
+    cardElement.classList.add(`${type}-card`);
+
+    if (type === "photographer") {
+      const { name, id, city, country, tagline, price, portrait } = data;
+      const picturePath = `assets/photographers/${portrait}`;
+
+      cardElement.innerHTML = `
+        <div class="cadre">
+          <img src="${picturePath}" alt="Portrait de ${name}" />
+        </div>
+        <h2>${name}</h2>
+        <p class="location">${city}, ${country}</p>
+        <p class="tagline">${tagline}</p>
+        <p class="price">${price}€/jour</p>
+      `;
+
+      const navigateToPhotographer = () => {
+        window.location.href = `photographer.html?id=${id}`;
+      };
+
+      cardElement.addEventListener("click", navigateToPhotographer);
+      this.addKeyboardInteraction(cardElement, navigateToPhotographer);
+    } else if (type === "media") {
+      const { title, image, video, likes } = data;
+      const mediaPath = image
+        ? `assets/media/image/${image}`
+        : `assets/media/video/${video}`;
+      const mediaType = image ? "image" : "video";
+
+      cardElement.innerHTML = `
+        <${mediaType} class="media" src="${mediaPath}" alt="${title}" tabindex="0"></${mediaType}>
+        <div class="media-title">
+          <p class="title">${title}</p>
+          <span class="likes-container">
+            <p class="likes">${likes}</p>
+            <svg viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="heart-icon">
+              <path d="M9.5 18.35L8.23125 17.03C3.725 12.36 0.75 9.28 0.75 5.5C0.75 2.42 2.8675 0 5.5625 0C7.085 0 8.54625 0.81 9.5 2.09C10.4537 0.81 11.915 0 13.4375 0C16.1325 0 18.25 2.42 18.25 5.5C18.25 9.28 15.275 12.36 10.7688 17.04L9.5 18.35Z" fill="#911C1C"/>
+            </svg>
+          </span>
+        </div>
+      `;
+
+      this.attachLightboxEvent(data, cardElement);
+    }
+
+    return cardElement;
+  }
+
   /**
    * Crée une carte pour un photographe sur la page d'accueil.
    *
@@ -16,36 +91,7 @@ export class AppView {
    * @returns {HTMLElement} L'élément HTML représentant la carte du photographe.
    */
   createPhotographerCard(photographerInfo) {
-    // Simplifié pour plus de clarté
-    const { name, id, city, country, tagline, price, portrait } =
-      photographerInfo;
-    const picturePath = `assets/photographers/${portrait}`;
-
-    const articleElement = document.createElement("article");
-    articleElement.classList.add("photographer-card");
-    articleElement.setAttribute("role", "listitem");
-    articleElement.innerHTML = `
-      <div class="cadre">
-        <img src="${picturePath}" alt="Portrait de ${name}" />
-      </div>
-      <h2>${name}</h2>
-      <p class="location">${city}, ${country}</p>
-      <p class="tagline">${tagline}</p>
-      <p class="price">${price}€/jour</p>
-    `;
-
-    articleElement.addEventListener("click", () => {
-      window.location.href = `photographer.html?id=${id}`;
-    });
-
-    articleElement.setAttribute("tabindex", "0");
-    articleElement.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        window.location.href = `photographer.html?id=${id}`;
-      }
-    });
-
-    return articleElement;
+    return this.createCard(photographerInfo, "photographer");
   }
 
   /**
@@ -55,7 +101,6 @@ export class AppView {
    * @returns {void}
    */
   displayPhotographerBanner(photographerInfo) {
-    // Renommé pour refléter son rôle
     const photographerBannerElement =
       document.querySelector(".photograph-header");
     photographerBannerElement.innerHTML = `
@@ -88,7 +133,6 @@ export class AppView {
    * @returns {void}
    */
   displayStickyInfoBox(photographerPrice, photographerTotalLikes) {
-    // Renommé pour refléter son rôle
     document
       .querySelector("body")
       .append(
@@ -107,14 +151,19 @@ export class AppView {
     const worksContainerElement = document.querySelector(".work-container");
     worksContainerElement.innerHTML = ""; // Vider le conteneur avant d'ajouter les nouveaux médias
     mediaList.forEach((mediaData) => {
-      const mediaCardElement = this.createMediaCard(mediaData);
+      const mediaCardElement = this.createCard(mediaData, "media");
       worksContainerElement.appendChild(mediaCardElement); // Ajouter le média à la section des travaux
 
       // Ajouter un gestionnaire d'événements pour les likes
-      this.attachLikeEvent(mediaData, photographerInfo, mediaCardElement);
+      this.attachLikeEvent(mediaData, mediaCardElement, photographerInfo);
 
-      // Ajouter un gestionnaire d'événements pour la lightbox
-      this.attachLightboxEvent(mediaData, mediaCardElement);
+      // Utiliser attachMediaEvents pour gérer les clics et les interactions clavier
+      const mediaElement = mediaCardElement.querySelector(".media");
+      if (mediaElement) {
+        this.eventManager.attachMediaEvents(mediaElement, () => {
+          this.eventManager.trigger("openLightbox", mediaData);
+        });
+      }
     });
 
     // S'assurer que les médias sont accessibles avec Tab
@@ -131,29 +180,8 @@ export class AppView {
    * @returns {HTMLElement} L'élément HTML représentant la carte du média.
    */
   createMediaCard(media) {
-    // Simplifié pour plus de clarté
-    const { title, image, video, likes } = media;
-    const mediaPath = image
-      ? `assets/media/image/${image}`
-      : `assets/media/video/${video}`;
-    const mediaType = image ? "image" : "video";
-
-    const mediaCard = document.createElement("article");
-    mediaCard.classList.add("media-card");
-    mediaCard.innerHTML = `
-      <${mediaType} class="media" src="${mediaPath}" alt="${title}" tabindex="0"></${mediaType}>
-      <div class="media-title">
-        <p class="title">${title}</p>
-        <span class="likes-container">
-        <p class="likes">${likes}</p>
-        <svg  viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="heart-icon">
-          <path d="M9.5 18.35L8.23125 17.03C3.725 12.36 0.75 9.28 0.75 5.5C0.75 2.42 2.8675 0 5.5625 0C7.085 0 8.54625 0.81 9.5 2.09C10.4537 0.81 11.915 0 13.4375 0C16.1325 0 18.25 2.42 18.25 5.5C18.25 9.28 15.275 12.36 10.7688 17.04L9.5 18.35Z" fill="#911C1C"/>
-        </svg>
-        </span>
-      </div>
-    `;
-
-    return mediaCard;
+    console.log("Création de la carte média");
+    return this.createCard(media, "media");
   }
 
   /**
@@ -238,56 +266,49 @@ export class AppView {
     mediaElement.setAttribute("alt", mediaData.title);
     mediaElement.setAttribute("tabindex", "0");
 
-    // Ouvrir la lightbox au clic
-    mediaElement.addEventListener("click", () => {
+    // Ajout des événements de clic et de clavier
+    this.eventManager.addEvent(mediaElement, "click", () => {
       console.log("Clic détecté sur le média :", mediaData.title);
-      if (!this.controller.mediaList) {
-        console.error(
-          "La liste des médias n'est pas définie dans le contrôleur. Assurez-vous que les médias sont correctement chargés."
-        );
-        return;
-      }
-      this.controller.openMediaLightbox(mediaData);
+      this.eventManager.trigger("openLightbox", mediaData);
     });
 
-    // Ouvrir la lightbox avec la touche "Entrée"
-    mediaElement.addEventListener("keydown", (event) => {
+    this.eventManager.addEvent(mediaElement, "keydown", (event) => {
       if (event.key === "Enter") {
         console.log("Touche Entrée détectée sur le média :", mediaData.title);
-        if (!this.controller.mediaList) {
-          console.error(
-            "La liste des médias n'est pas définie dans le contrôleur. Assurez-vous que les médias sont correctement chargés."
-          );
-          return;
-        }
-        this.controller.openMediaLightbox(mediaData);
+        this.eventManager.trigger("openLightbox", mediaData);
       }
     });
   }
 
   /**
-   * Ajoute un événement pour gérer les likes sur un média.
+   * Ajoute un événement pour gérer les likes sur un média via le contrôleur.
    *
    * @param {Object} medium - Les données du média.
-   * @param {Object} photographer - Les données du photographe.
    * @param {HTMLElement} mediaCard - L'élément HTML de la carte du média.
+   * @param {Object} photographer - Les données du photographe.
    * @returns {void}
    */
-  attachLikeEvent(medium, photographer, mediaCard) {
-    // Renommé pour refléter son rôle
+  attachLikeEvent(medium, mediaCard, photographer) {
     const likeButton = mediaCard.querySelector(".likes-container");
     const mediaLikesContainer = likeButton.querySelector(".likes");
     const heartIcon = mediaCard.querySelector(".heart-icon");
 
-    likeButton.addEventListener("click", () => {
-      if (!medium.isLiked) {
-        heartIcon.classList.add("liked");
-        this.model.incrementLikes(medium, photographer);
-      } else {
-        heartIcon.classList.remove("liked");
-        this.model.decrementLikes(medium, photographer);
-      }
-      this.updateLikeCounters(medium, photographer, mediaLikesContainer);
+    if (!likeButton || !mediaLikesContainer || !heartIcon) {
+      console.error("Élément manquant dans la carte média :", {
+        likeButton,
+        mediaLikesContainer,
+        heartIcon,
+      });
+      return;
+    }
+
+    this.eventManager.addEvent(likeButton, "click", () => {
+      this.eventManager.trigger("toggleLike", {
+        medium,
+        mediaLikesContainer,
+        heartIcon,
+        photographer, // Ajout du photographe
+      });
     });
   }
 
@@ -299,57 +320,11 @@ export class AppView {
    * @returns {void}
    */
   attachSortEvent(media, photographer) {
-    const sortSelect = document.querySelector("#sort-select");
-    sortSelect.addEventListener("change", (event) => {
-      const selectedOption = event.target.value;
-      const sortedMedia = this.model.sortMediaByCriteria(media, selectedOption);
-      this.displayPhotographerMedia(sortedMedia, photographer); // Réafficher les médias triés
-    });
-  }
-
-  /**
-   * Ajoute un événement pour gérer la modale de contact.
-   *
-   * @returns {void}
-   */
-  attachModalEvents() {
-    // Renommé pour refléter son rôle
-    const modal = document.getElementById("contact_modal");
-    const closeButton = modal.querySelector(".close-button");
-    const contactForm = document.getElementById("contact_form");
-    const contactButton = modal.querySelector(".contact_button");
-
-    closeButton.addEventListener("click", () => {
-      this.hideContactModal();
-    });
-
-    window.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        this.hideContactModal();
-      } else if (
-        event.target === contactForm ||
-        event.target === contactButton
-      ) {
-        event.preventDefault(); // Empêche le rechargement de la page
-        this.hideContactModal();
-        // récupérer les valeurs du formulaire
-        const formData = new FormData(contactForm);
-        // Afficher les valeurs du formulaire dans la console
-        console.log(
-          "Prénom :",
-          formData.get("prenom"),
-          "\nNom :",
-          formData.get("nom"),
-          "\nEmail :",
-          formData.get("email"),
-          "\nMessage :",
-          formData.get("message")
-        );
-      }
-    });
+    this.eventManager.attachSortEvent(media, photographer);
   }
 
   // Section: Méthodes de gestion de la modale
+
   /**
    * Affiche la modale de contact pour un photographe.
    *
@@ -357,11 +332,16 @@ export class AppView {
    * @returns {void}
    */
   showContactModal(photographerName) {
-    // Renommé pour refléter son rôle
+    const modalTitle = document.querySelector(".photographer-name");
     const modal = document.getElementById("contact_modal");
     modal.style.display = "flex";
-    const modalTitle = document.querySelector(".photographer-name");
-    modalTitle.innerHTML = `Contactez-moi <br>${photographerName}`;
+    modal.setAttribute("aria-hidden", "false");
+    modalTitle.textContent = `Contactez-moi ${photographerName}`;
+    this.eventManager.attachModalEvents();
+    const firstInput = modal.querySelector("input, textarea, select");
+    if (firstInput) {
+      firstInput.focus();
+    }
   }
 
   /**
@@ -370,27 +350,39 @@ export class AppView {
    * @returns {void}
    */
   hideContactModal() {
-    // Renommé pour refléter son rôle
     const modal = document.getElementById("contact_modal");
     modal.style.display = "none";
   }
 
   // Section: Méthodes utilitaires
-  /**
-   * Met à jour le compteur de likes pour un média.
-   *
-   * @param {Object} media - Les données du média.
-   * @param {Object} photographer - Les données du photographe.
-   * @param {HTMLElement} mediaLikesContainer - L'élément HTML du compteur de likes.
-   * @returns {void}
-   */
-  updateLikeCounters(media, photographer, mediaLikesContainer) {
-    // Renommé pour refléter son rôle
-    const globalLikesContainer = document.querySelector(".total-likes");
 
-    // Mettre à jour le compteur de likes
-    mediaLikesContainer.textContent = parseInt(media.likes);
-    globalLikesContainer.textContent = parseInt(photographer.totalLikes); // Met à jour le compteur total de likes
+  /**
+   * Met à jour l'affichage des likes pour un média et les likes totaux.
+   *
+   * @param {HTMLElement} mediaLikesContainer - L'élément HTML du compteur de likes du média.
+   * @param {number} mediaLikes - Le nouveau nombre de likes pour le média.
+   * @param {HTMLElement} totalLikesContainer - L'élément HTML du compteur de likes totaux.
+   * @param {number} totalLikes - Le nouveau nombre de likes totaux.
+   */
+  updateLikesDisplay(
+    mediaLikesContainer,
+    mediaLikes,
+    totalLikesContainer,
+    totalLikes
+  ) {
+    if (!mediaLikesContainer || !totalLikesContainer) {
+      console.error(
+        "Éléments HTML introuvables pour la mise à jour des likes",
+        {
+          mediaLikesContainer,
+          totalLikesContainer,
+        }
+      );
+      return;
+    }
+
+    mediaLikesContainer.textContent = mediaLikes;
+    totalLikesContainer.textContent = totalLikes;
   }
 
   /**
@@ -442,12 +434,6 @@ export class AppView {
     // Ajouter les éléments à la lightbox
     lightboxContentElement.appendChild(mediaElement);
     lightboxContentElement.appendChild(titleElement);
-
-    console.log("Contenu de la lightbox rendu :", {
-      mediaType,
-      mediaPath,
-      title: mediaData.title,
-    });
 
     // Afficher la lightbox
     lightboxElement.style.display = "flex";
@@ -541,44 +527,5 @@ export class AppView {
         });
       }
     }
-  }
-
-  /**
-   * Ajoute les événements de navigation et de fermeture à la lightbox.
-   *
-   * @returns {void}
-   */
-  attachLightboxEvents() {
-    const lightboxElement = document.getElementById("lightbox");
-    const closeButton = lightboxElement.querySelector(".lightbox-close");
-    const nextButton = lightboxElement.querySelector(".lightbox-next");
-    const prevButton = lightboxElement.querySelector(".lightbox-prev");
-
-    // Événement pour fermer la lightbox
-    closeButton.addEventListener("click", () => {
-      this.controller.closeMediaLightbox();
-      this.toggleLightboxFocus(false); // Réactiver le focus en dehors de la lightbox
-    });
-
-    // Événements pour naviguer entre les médias
-    nextButton.addEventListener("click", () => {
-      this.controller.showNextMedia();
-    });
-
-    prevButton.addEventListener("click", () => {
-      this.controller.showPreviousMedia();
-    });
-
-    // Événement pour gérer les interactions clavier uniquement dans la lightbox
-    lightboxElement.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        this.controller.closeMediaLightbox();
-        this.toggleLightboxFocus(false); // Réactiver le focus en dehors de la lightbox
-      } else if (event.key === "ArrowRight") {
-        this.controller.showNextMedia();
-      } else if (event.key === "ArrowLeft") {
-        this.controller.showPreviousMedia();
-      }
-    });
   }
 }

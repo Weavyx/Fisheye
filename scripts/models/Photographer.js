@@ -25,4 +25,13 @@ export class Photographer {
     this.media = [];
     this.totalLikes = null; // Nombre total de likes
   }
+
+  /**
+   * Calcule le nombre total de likes pour un photographe.
+   *
+   * @returns {number} Le nombre total de likes.
+   */
+  calculateTotalLikes() {
+    return this.media.reduce((total, media) => total + media.likes, 0);
+  }
 }

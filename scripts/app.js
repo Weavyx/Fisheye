@@ -1,15 +1,14 @@
-/**
- * Initialise l'application en fonction de la page actuelle.
- * Détecte la page et appelle les méthodes appropriées du contrôleur.
- *
- * @module App
- */
 import { AppModel } from "./models/Model.js";
 import { AppView } from "./views/View.js";
 import { AppController } from "./controller/Controller.js";
+import { EventManager } from "./utils/EventManager.js";
 
-// Initialisation du contrôleur
-const app = new AppController(new AppModel(), new AppView());
+// Initialisation des singletons
+const app = new AppController(
+  new AppModel(),
+  new AppView(),
+  new EventManager()
+);
 
 // Détection de la page actuelle
 const CURRENT_PAGE = window.location.pathname;
@@ -20,14 +19,26 @@ const CURRENT_PAGE = window.location.pathname;
  * @event DOMContentLoaded
  */
 document.addEventListener("DOMContentLoaded", () => {
-  if (CURRENT_PAGE.includes("index.html") || CURRENT_PAGE === "/") {
-    app.renderHomePage(); // Renommé pour refléter son rôle
-  } else if (CURRENT_PAGE.includes("photographer.html")) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const photographerId = urlParams.get("id");
-    app.renderPhotographerPage(photographerId); // Renommé pour refléter son rôle
+  try {
+    if (CURRENT_PAGE.includes("index.html") || CURRENT_PAGE === "/") {
+      app.renderHomePage();
+    } else if (CURRENT_PAGE.includes("photographer.html")) {
+      // Récupère l'ID du photographe dans l'URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const photographerId = urlParams.get("id");
 
-    // Attacher les événements de la lightbox
-    app.view.attachLightboxEvents();
+      app.renderPhotographerPage(photographerId);
+
+      // Initialiser les événements spécifiques à photographer.html
+      app.initializePhotographerPageEvents();
+
+      // Attacher les événements de la lightbox
+      app.eventManager.attachLightboxEvents();
+    }
+  } catch (error) {
+    console.error(
+      "Erreur lors de l'initialisation de l'application :",
+      error.message
+    );
   }
 });
