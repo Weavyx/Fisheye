@@ -1,3 +1,6 @@
+import { createPhotographerCard } from "./components/PhotographerCardFactory.js";
+import { createMediaCard } from "./components/MediaCardFactory.js";
+
 /**
  * Classe représentant la vue de l'application.
  * Gère l'affichage des données et les interactions utilisateur.
@@ -9,6 +12,10 @@ export class AppView {
     }
     this.eventManager = null;
     AppView.instance = this;
+
+    // Remplacement des appels directs par les imports des factories
+    this.createPhotographerCard = createPhotographerCard;
+    this.createMediaCard = createMediaCard;
   }
 
   // Section: Méthodes de rendu
@@ -25,73 +32,6 @@ export class AppView {
         action();
       }
     });
-  }
-
-  /**
-   * Crée une carte générique pour un élément.
-   *
-   * @param {Object} data - Les données de l'élément.
-   * @param {string} type - Le type de carte ("photographer" ou "media").
-   * @returns {HTMLElement} L'élément HTML représentant la carte.
-   */
-  createCard(data, type) {
-    const cardElement = document.createElement("article");
-    cardElement.classList.add(`${type}-card`);
-
-    if (type === "photographer") {
-      const { name, id, city, country, tagline, price, portrait } = data;
-      const picturePath = `assets/photographers/${portrait}`;
-
-      cardElement.innerHTML = `
-        <div class="cadre">
-          <img src="${picturePath}" alt="Portrait de ${name}" />
-        </div>
-        <h2>${name}</h2>
-        <p class="location">${city}, ${country}</p>
-        <p class="tagline">${tagline}</p>
-        <p class="price">${price}€/jour</p>
-      `;
-
-      const navigateToPhotographer = () => {
-        window.location.href = `photographer.html?id=${id}`;
-      };
-
-      cardElement.addEventListener("click", navigateToPhotographer);
-      this.addKeyboardInteraction(cardElement, navigateToPhotographer);
-    } else if (type === "media") {
-      const { title, image, video, likes } = data;
-      const mediaPath = image
-        ? `assets/media/image/${image}`
-        : `assets/media/video/${video}`;
-      const mediaType = image ? "image" : "video";
-
-      cardElement.innerHTML = `
-        <${mediaType} class="media" src="${mediaPath}" alt="${title}" tabindex="0"></${mediaType}>
-        <div class="media-title">
-          <p class="title">${title}</p>
-          <span class="likes-container">
-            <p class="likes">${likes}</p>
-            <svg viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="heart-icon">
-              <path d="M9.5 18.35L8.23125 17.03C3.725 12.36 0.75 9.28 0.75 5.5C0.75 2.42 2.8675 0 5.5625 0C7.085 0 8.54625 0.81 9.5 2.09C10.4537 0.81 11.915 0 13.4375 0C16.1325 0 18.25 2.42 18.25 5.5C18.25 9.28 15.275 12.36 10.7688 17.04L9.5 18.35Z" fill="#911C1C"/>
-            </svg>
-          </span>
-        </div>
-      `;
-
-      this.attachLightboxEvent(data, cardElement);
-    }
-
-    return cardElement;
-  }
-
-  /**
-   * Crée une carte pour un photographe sur la page d'accueil.
-   *
-   * @param {Object} photographerInfo - Les données du photographe.
-   * @returns {HTMLElement} L'élément HTML représentant la carte du photographe.
-   */
-  createPhotographerCard(photographerInfo) {
-    return this.createCard(photographerInfo, "photographer");
   }
 
   /**
@@ -171,17 +111,6 @@ export class AppView {
     mediaElements.forEach((media) => {
       media.setAttribute("tabindex", "0");
     });
-  }
-
-  /**
-   * Crée une carte pour un média.
-   *
-   * @param {Object} media - Les données du média.
-   * @returns {HTMLElement} L'élément HTML représentant la carte du média.
-   */
-  createMediaCard(media) {
-    console.log("Création de la carte média");
-    return this.createCard(media, "media");
   }
 
   /**
