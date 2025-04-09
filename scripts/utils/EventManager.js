@@ -59,34 +59,109 @@ export class EventManager {
   }
 
   attachSortEvent(media, photographer) {
-    const sortSelect = document.querySelector("#sort-select");
-    if (!sortSelect) {
-      console.error("Élément #sort-select introuvable.");
+    const customSort = document.querySelector("#custom-sort");
+    if (!customSort) {
+      console.error("Élément #custom-sort introuvable.");
       return;
     }
 
-    this.addEvent(sortSelect, "change", (event) => {
-      const selectedOption = event.target.value;
+    const button = customSort.querySelector(".custom-sort__button");
+    const buttonText = button.querySelector(".custom-sort__button-text");
+    const optionsContainer = customSort.querySelector(".custom-sort__options");
+    const options = Array.from(
+      optionsContainer.querySelectorAll(".custom-sort__option")
+    );
+
+    // Applique inert au chargement de la page
+    optionsContainer.setAttribute("inert", "");
+
+    // Fonction utilitaire pour mettre à jour les options visibles
+    const updateVisibleOptions = (selectedOption) => {
+      options.forEach((option) => {
+        option.style.display = option === selectedOption ? "none" : "block";
+      });
+    };
+
+    // Fonction utilitaire pour gérer la sélection
+    const handleSelection = (selectedOption) => {
+      options.forEach((option) => option.classList.remove("selected"));
+      selectedOption.classList.add("selected");
+
+      if (buttonText) {
+        buttonText.textContent = selectedOption.textContent;
+      }
+
+      updateVisibleOptions(selectedOption);
+
+      const selectedValue = selectedOption.getAttribute("data-value");
       const sortedMedia = this.controller.model.sortMediaByCriteria(
         media,
-        selectedOption
+        selectedValue
       );
       this.view.displayPhotographerMedia(sortedMedia, photographer);
+
+      toggleDropdown(false); // Ferme le menu après la sélection
+    };
+
+    // Fonction utilitaire pour basculer l'état du menu déroulant
+    const toggleDropdown = (forceState) => {
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
+      const newState = forceState !== undefined ? forceState : !isExpanded;
+
+      button.setAttribute("aria-expanded", newState);
+      optionsContainer.setAttribute("aria-hidden", !newState);
+
+      // Active ou désactive inert en fonction de l'état du menu
+      if (newState) {
+        optionsContainer.removeAttribute("inert");
+      } else {
+        optionsContainer.setAttribute("inert", "");
+      }
+    };
+
+    // Initialisation : Marquer l'option présélectionnée et cacher les autres
+    const initializeOptions = () => {
+      const defaultOption = options.find(
+        (option) => option.getAttribute("data-value") === "popularite"
+      );
+      if (defaultOption) {
+        defaultOption.classList.add("selected");
+        if (buttonText) {
+          buttonText.textContent = defaultOption.textContent;
+        }
+        updateVisibleOptions(defaultOption);
+      }
+    };
+
+    // Ajout des événements
+    this.addEvent(button, "click", () => {
+      toggleDropdown();
     });
 
-    this.addEvent(sortSelect, "keydown", (event) => {
+    this.addEvent(button, "keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        sortSelect.size = sortSelect.options.length;
-        this.addEvent(sortSelect, "blur", () => {
-          sortSelect.size = 0;
-        });
+        toggleDropdown();
       }
     });
 
-    this.addEvent(sortSelect, "focus", () => {
-      sortSelect.size = 0;
+    options.forEach((option) => {
+      this.addEvent(option, "click", () => handleSelection(option));
+      this.addEvent(option, "keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleSelection(option);
+        }
+      });
     });
+
+    document.addEventListener("click", (event) => {
+      if (!customSort.contains(event.target)) {
+        toggleDropdown(false);
+      }
+    });
+
+    initializeOptions(); // Appel de l'initialisation
   }
 
   attachModalEvents() {
@@ -95,9 +170,11 @@ export class EventManager {
       console.error("Modale de contact introuvable.");
       return;
     }
-    const closeButton = modal.querySelector(".close-button");
+    const closeButton = modal.querySelector(".contact-modal__close-button");
     const contactForm = document.getElementById("contact_form");
-    const contactButton = document.querySelector(".contact_button");
+    const contactButton = document.querySelector(
+      ".photograph-header__contact-button"
+    );
 
     if (!closeButton || !contactForm || !contactButton) {
       console.error("Éléments de la modale de contact manquants.");
@@ -129,48 +206,24 @@ export class EventManager {
   }
 
   attachLightboxEvents() {
-    const lightboxElement = document.getElementById("lightbox");
-    if (!lightboxElement) {
+    const lightbox = document.getElementById("lightbox");
+    if (!lightbox) {
       console.error("Lightbox introuvable dans le DOM.");
       return;
     }
 
-    const closeButton = lightboxElement.querySelector(".lightbox-close");
-    const nextButton = lightboxElement.querySelector(".lightbox-next");
-    const prevButton = lightboxElement.querySelector(".lightbox-prev");
-
-    if (!closeButton || !nextButton || !prevButton) {
-      console.error("Éléments de la lightbox manquants.");
-      return;
-    }
-
-    this.addEvent(closeButton, "click", () => {
-      this.controller.closeMediaLightbox();
+    // Ajout des événements pour la lightbox
+    this.addEvent(lightbox.querySelector(".lightbox__close"), "click", () => {
+      this.trigger("closeLightbox");
     });
 
-    this.addEvent(nextButton, "click", () => {
-      this.controller.showNextMedia();
+    this.addEvent(lightbox.querySelector(".lightbox__prev"), "click", () => {
+      this.trigger("showPreviousMedia");
     });
 
-    this.addEvent(prevButton, "click", () => {
-      this.controller.showPreviousMedia();
+    this.addEvent(lightbox.querySelector(".lightbox__next"), "click", () => {
+      this.trigger("showNextMedia");
     });
-
-    const handleKeydown = (event) => {
-      switch (event.key) {
-        case "Escape":
-          this.controller.closeMediaLightbox();
-          break;
-        case "ArrowRight":
-          this.controller.showNextMedia();
-          break;
-        case "ArrowLeft":
-          this.controller.showPreviousMedia();
-          break;
-      }
-    };
-
-    this.addEvent(lightboxElement, "keydown", handleKeydown);
   }
 
   /**
@@ -203,9 +256,9 @@ export class EventManager {
    * @param {HTMLElement} lightboxElement - L'élément HTML de la lightbox.
    */
   initializeLightboxEvents(lightboxElement) {
-    const closeButton = lightboxElement.querySelector(".lightbox-close");
-    const nextButton = lightboxElement.querySelector(".lightbox-next");
-    const prevButton = lightboxElement.querySelector(".lightbox-prev");
+    const closeButton = lightboxElement.querySelector(".lightbox__close");
+    const nextButton = lightboxElement.querySelector(".lightbox__next");
+    const prevButton = lightboxElement.querySelector(".lightbox__prev");
 
     if (!closeButton || !nextButton || !prevButton) {
       console.error("Éléments de la lightbox manquants.");
@@ -282,7 +335,9 @@ export class EventManager {
     this.controller.model.toggleMediaLike(medium, photographer);
 
     // Mettre à jour l'affichage des likes
-    const totalLikesContainer = document.querySelector(".total-likes");
+    const totalLikesContainer = document.querySelector(
+      ".sticky-info-box__total-likes"
+    );
     if (!totalLikesContainer) {
       console.error("Élément .total-likes introuvable dans le DOM.");
       return;

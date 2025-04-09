@@ -38,16 +38,24 @@ export class AppController {
       .fetchPhotographers()
       .then((photographerList) => {
         const photographersSectionElement = document.querySelector(
-          ".photographer_section"
+          ".photographer-section"
         );
         photographerList.forEach((photographerInfo) => {
-          console.log("Photographer data:", photographerInfo);
-          photographersSectionElement.appendChild(
-            this.view.factoryManager.create(
-              "photographerCard",
-              photographerInfo
-            )
+          const photographerCard = this.view.factoryManager.create(
+            "photographerCard",
+            photographerInfo
           );
+          photographersSectionElement.appendChild(photographerCard);
+
+          // Ajout des événements via l'eventManager
+          this.eventManager.addEvent(photographerCard, "click", () => {
+            window.location.href = `photographer.html?id=${photographerInfo.id}`;
+          });
+          this.eventManager.addEvent(photographerCard, "keydown", (event) => {
+            if (event.key === "Enter") {
+              window.location.href = `photographer.html?id=${photographerInfo.id}`;
+            }
+          });
         });
       })
       .catch((error) => {
@@ -83,9 +91,9 @@ export class AppController {
               photographerInfo.price,
               photographerInfo.totalLikes
             );
-
             this.view.displayPhotographerMedia(mediaList, photographerInfo);
             this.eventManager.attachSortEvent(mediaList, photographerInfo);
+
             this.initializeLightboxEvents();
           });
       })
@@ -278,8 +286,10 @@ export class AppController {
 
     this.model.toggleMediaLike(medium, photographer);
 
-    const mediaLikesContainer = mediaCard.querySelector(".likes");
-    const totalLikesContainer = document.querySelector(".total-likes");
+    const mediaLikesContainer = mediaCard.querySelector(".media__likes");
+    const totalLikesContainer = document.querySelector(
+      ".photographer__total-likes"
+    );
 
     this.view.updateLikesDisplay(
       mediaLikesContainer,

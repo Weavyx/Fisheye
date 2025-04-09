@@ -12,7 +12,8 @@ body {
   font-family: "DM Sans", sans-serif;
 }
 
-header {
+/* Header */
+.header {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -20,13 +21,11 @@ header {
   height: 90px;
   padding-top: 42px;
 }
-
-.logo {
+.header__logo {
   height: 50px;
   margin-left: 100px;
 }
-
-h1 {
+.header__title {
   color: #901c1c;
   margin-right: 100px;
   height: 47px;
@@ -37,12 +36,14 @@ h1 {
   letter-spacing: 0;
 }
 
-#main {
+/* Main */
+.main {
   padding: 113px 0;
   display: flex;
 }
 
-.photographer_section {
+/* Photographer Section */
+.photographer-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
@@ -53,16 +54,14 @@ h1 {
   column-gap: 20px;
   width: 100%;
 }
-
-.photographer_section article {
+.photographer-section__article {
   justify-self: center;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-flow: column nowrap;
 }
-
-.photographer_section article .cadre {
+.photographer-section__article .photographer-section__frame {
   height: 200px;
   width: 200px;
   border-radius: 100%;
@@ -70,10 +69,12 @@ h1 {
   overflow: hidden;
   position: relative;
 }
-
-.photographer_section article .cadre img {
+.photographer-section__img {
   width: 526px;
   height: 358px;
+}
+
+.portrait--horizontal {
   object-fit: contain;
   transform: translate(-50%, -42%);
   position: absolute;
@@ -81,18 +82,17 @@ h1 {
   left: 50%;
 }
 
-/* .photographer_section article:nth-child(1) .cadre img,
-.photographer_section article:nth-child(3) .cadre img {
-  width: 526px;
-  height: 358px;
-  object-fit: cover;
-  transform: translate(-50%, -48%);
+.portrait--vertical {
+  width: 400px;
+  height: 200px;
+  transform: translate(-50%, -50%);
   position: absolute;
   top: 50%;
   left: 50%;
-} */
+  object-fit: contain;
+}
 
-.photographer_section article h2 {
+.photographer-section__article .photographer-section__name {
   color: #d3573c;
   font-weight: 400;
   font-size: 36px;
@@ -102,8 +102,7 @@ h1 {
   margin-top: 20px;
   height: 47px;
 }
-
-.photographer_section article .location {
+.photographer-section__article .photographer-section__location {
   font-weight: 400;
   font-size: 13px;
   line-height: 1;
@@ -112,8 +111,7 @@ h1 {
   color: #901c1c;
   height: 17px;
 }
-
-.photographer_section article .tagline {
+.photographer-section__article .photographer-section__tagline {
   font-weight: 400;
   font-size: 10px;
   line-height: 1;
@@ -123,8 +121,7 @@ h1 {
   margin-top: 3px;
   height: 13px;
 }
-
-.photographer_section article .price {
+.photographer-section__article .photographer-section__price {
   font-weight: 400;
   font-size: 9px;
   line-height: 1;
@@ -135,25 +132,23 @@ h1 {
   height: 12px;
 }
 
+/* Accessibility */
 .photographer-card {
   cursor: pointer;
 }
-
 .photographer-card:focus {
   outline: 2px solid #901c1c;
   outline-offset: 2px;
 }
-
 .media {
   cursor: pointer;
 }
-
 .media:focus {
   outline: 2px solid #901c1c;
   outline-offset: 2px;
 }
 
-/* Style de base pour le message d'erreur */
+/* Error Message */
 .error-message {
   color: #d9534f; /* Rouge pour signaler une erreur */
   background-color: #f8d7da; /* Fond clair pour une meilleure lisibilité */

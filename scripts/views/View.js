@@ -64,12 +64,13 @@ export class AppView {
       "photographerBanner",
       photographerInfo
     );
-    const bannerContainer = document.querySelector(".photograph-header");
+    const bannerContainer = document.getElementById("photograph-header");
     bannerContainer.innerHTML = "";
     bannerContainer.appendChild(photographerBannerElement);
 
-    const contactButtonElement =
-      bannerContainer.querySelector(".contact_button");
+    const contactButtonElement = bannerContainer.querySelector(
+      ".photograph-header__contact-button"
+    );
     contactButtonElement.addEventListener("click", () => {
       this.showContactModal(photographerInfo.name);
     });
@@ -98,7 +99,9 @@ export class AppView {
    * @returns {void}
    */
   displayPhotographerMedia(mediaList, photographerInfo) {
-    const worksContainerElement = document.querySelector(".work-container");
+    const worksContainerElement = document.querySelector(
+      ".photograph-work__container"
+    );
     worksContainerElement.innerHTML = ""; // Vider le conteneur avant d'ajouter les nouveaux médias
     mediaList.forEach((mediaData) => {
       const mediaCardElement = this.factoryManager.create(
@@ -106,10 +109,8 @@ export class AppView {
         mediaData
       );
       worksContainerElement.appendChild(mediaCardElement); // Ajouter le média à la section des travaux
-
       // Ajouter un gestionnaire d'événements pour les likes
       this.attachLikeEvent(mediaData, mediaCardElement, photographerInfo);
-
       // Utiliser attachMediaEvents pour gérer les clics et les interactions clavier
       const mediaElement = mediaCardElement.querySelector(".media");
       if (mediaElement) {
@@ -161,9 +162,13 @@ export class AppView {
    * @returns {void}
    */
   attachLikeEvent(medium, mediaCard, photographer) {
-    const likeButton = mediaCard.querySelector(".likes-container");
-    const mediaLikesContainer = likeButton.querySelector(".likes");
-    const heartIcon = mediaCard.querySelector(".heart-icon");
+    const likeButton = mediaCard.querySelector(
+      ".photograph-work__likes-container"
+    );
+    const mediaLikesContainer = likeButton.querySelector(
+      ".photograph-work__likes"
+    );
+    const heartIcon = mediaCard.querySelector(".photograph-work__heart-icon");
 
     this.eventManager.addEvent(likeButton, "click", () => {
       this.eventManager.trigger("toggleLike", {
@@ -195,7 +200,9 @@ export class AppView {
    * @returns {void}
    */
   showContactModal(photographerName) {
-    const modalTitle = document.querySelector(".photographer-name");
+    const modalTitle = document.querySelector(
+      ".contact-modal__photographer-name"
+    );
     const modal = document.getElementById("contact_modal");
     modal.style.display = "flex";
     modal.setAttribute("aria-hidden", "false");
@@ -272,12 +279,31 @@ export class AppView {
    * @returns {void}
    */
   renderLightboxMedia(mediaData) {
+    const lightbox = document.getElementById("lightbox");
+    if (!lightbox) {
+      console.error("Lightbox introuvable dans le DOM.");
+      return;
+    }
+
+    const lightboxContainer = lightbox.querySelector(".lightbox__content");
+    if (!lightboxContainer) {
+      console.error("Conteneur de contenu de la lightbox introuvable.");
+      return;
+    }
+
+    lightboxContainer.innerHTML = ""; // Vider le contenu existant
     const lightboxElement = this.factoryManager.create("lightbox", mediaData);
-    const lightboxContainer = document.getElementById("lightbox-container");
-    lightboxContainer.innerHTML = "";
     lightboxContainer.appendChild(lightboxElement);
-    lightboxContainer.style.display = "flex";
-    lightboxContainer.setAttribute("aria-hidden", "false");
+
+    lightbox.style.display = "flex";
+    lightbox.removeAttribute("inert"); // Supprime l'attribut inert pour rendre la lightbox interactive
+    lightbox.setAttribute("aria-hidden", "false"); // Rend la lightbox visible pour les technologies d'assistance
+
+    // Déplacer le focus sur le premier élément de la lightbox
+    const closeButton = lightbox.querySelector(".lightbox__close");
+    if (closeButton) {
+      closeButton.focus();
+    }
   }
 
   /**
@@ -286,22 +312,22 @@ export class AppView {
    * @returns {void}
    */
   closeLightbox() {
-    const lightboxElement = document.getElementById("lightbox");
-
-    // Vérification si la lightbox existe dans le DOM
-    if (!lightboxElement) {
-      console.error(
-        "Lightbox introuvable dans le DOM. Assurez-vous que l'élément HTML de la lightbox est correctement défini."
-      );
+    const lightbox = document.getElementById("lightbox");
+    if (!lightbox) {
+      console.error("Lightbox introuvable dans le DOM.");
       return;
     }
 
     // Masquer la lightbox
-    lightboxElement.style.display = "none";
-    lightboxElement.setAttribute("aria-hidden", "true");
+    lightbox.style.display = "none";
+    lightbox.setAttribute("inert", ""); // Ajoute l'attribut inert pour désactiver la lightbox
+    lightbox.setAttribute("aria-hidden", "true"); // Masque la lightbox pour les technologies d'assistance
 
-    // Réactiver le focus en dehors de la lightbox
-    this.toggleLightboxFocus(false);
+    // Déplacer le focus vers un élément valide en dehors de la lightbox
+    const mainContent = document.getElementById("main");
+    if (mainContent) {
+      mainContent.focus();
+    }
   }
 
   /**

@@ -21,7 +21,7 @@
   gap: 67.12px;
 }
 
-#sticky-info-box .likes-container {
+#sticky-info-box .sticky-info-box__likes-container {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -29,115 +29,125 @@
   gap: 4.62px;
 }
 
-#sticky-info-box .total-likes p {
+#sticky-info-box .sticky-info-box__total-likes {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: 0;
+  color: #000;
+}
+
+#sticky-info-box .sticky-info-box__price {
   font-weight: 500;
   font-size: 24px;
   line-height: 1;
   letter-spacing: 0;
 }
 
-#sticky-info-box .total-likes svg {
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: 0;
+/* Header */
+.header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: start;
+  height: 90px;
+  padding-top: 42px;
 }
-
-#sticky-info-box .price {
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: 0;
-}
-
-#sticky-info-box .photographer-price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  margin-top: 10px;
-}
-
-.logo {
-  height: 50px;
+.header__logo-link {
   margin-left: 100px;
 }
-
-h1 {
-  color: #901c1c;
-  margin-right: 100px;
-  height: 47px;
-  margin-top: 2px;
-  font-weight: 400;
-  font-size: 36px;
-  line-height: 1;
-  letter-spacing: 0;
+.header__logo {
+  height: 50px;
 }
 
+.header__logo-link:focus {
+  outline: 2px solid #901c1c; /* Couleur et épaisseur du contour */
+  outline-offset: 5px; /* Décalage du contour pour éviter qu'il touche le contenu */
+  border-radius: 5px; /* Coins arrondis pour correspondre au design */
+}
+
+/* Main */
 #main {
   margin-top: 40px;
   padding: 0 100px;
   width: 100%;
 }
 
-.photograph-header {
+/* Photograph Header */
+#photograph-header {
   background-color: #fafafa;
   height: 313px;
   padding: 0 100px;
   display: flex;
-  justify-content: space-around;
-  flex-flow: row nowrap;
+  justify-content: center;
   align-items: center;
   width: 100%;
 }
-
-.photograph-header h1 {
+.photograph-header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.photograph-header__left {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+.photograph-header__name {
   font-weight: 400;
   font-size: 64px;
   line-height: 1;
   letter-spacing: 0;
   height: 83px;
+  color: #d3573c;
 }
-
-.photograph-header .location {
+.photograph-header__location {
   font-weight: 400;
   font-size: 24px;
   line-height: 1;
   letter-spacing: 0;
+  display: inline;
+  color: #901c1c;
 }
-
-.photograph-header .tagline {
+.photograph-header__tagline {
   font-weight: 400;
   font-size: 18px;
   line-height: 1;
   letter-spacing: 0;
+  display: inline;
+  color: #525252;
 }
-
-.photograph-header .open-contact_button {
+.photograph-header__contact-button {
   color: white;
   padding: 11px;
   width: 170px;
-  height: 70px;
   border: none;
   background-color: #901c1c;
   border-radius: 5px;
   cursor: pointer;
   font-weight: 700;
   font-size: 20px;
-  line-height: 1;
+  line-height: 69px;
   letter-spacing: 0;
   text-align: center;
   vertical-align: middle;
 }
-
-.photograph-header .right-component {
+.photograph-header__contact-button:focus {
+  outline: 2px solid #901c1c; /* Couleur et épaisseur du contour */
+  outline-offset: 4px; /* Décalage du contour pour éviter qu'il touche le contenu */
+  border-radius: 5px; /* Coins arrondis pour correspondre au design */
+}
+.photograph-header__right {
   width: 200px;
   height: 200px;
   border-radius: 100%;
   overflow: hidden;
   position: relative;
 }
-
-.photograph-header img {
+.photograph-header__right img {
   width: 526px;
   height: 358px;
   object-fit: contain;
@@ -147,40 +157,37 @@ h1 {
   transform: translate(-50%, -50%);
 }
 
+/* Photograph Work */
 .photograph-work {
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: start;
   width: 100%;
+  padding-top: 9px;
 }
-
-.sorting {
+.photograph-work__sorting {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
   gap: 25px;
 }
-
-.sorting p {
+.photograph-work__sorting-label {
   font-weight: 700;
   font-size: 18px;
-  line-height: 1;
+  line-height: 23px;
   letter-spacing: 0;
 }
-
-.sorting select {
-  width: 170;
-  height: 69;
+.photograph-work__sorting-select {
+  width: 170px;
   border-radius: 5px;
   font-weight: 700;
   font-size: 18px;
-  line-height: 1;
+  line-height: 69px;
   letter-spacing: 0;
 }
-
-.work-container {
+.photograph-work__container {
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -190,7 +197,7 @@ h1 {
   margin-top: 40px;
 }
 
-.media-card {
+.photograph-work__media-card {
   width: 350px;
   height: 351px;
   display: flex;
@@ -200,15 +207,14 @@ h1 {
   gap: 0;
 }
 
-.media-card img,
-.media-card video {
+.photograph-work__media-card .media {
   width: 350px;
   height: 300px;
   object-fit: cover;
   border-radius: 5px;
 }
 
-.media-card div {
+.photograph-work__media-info {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -217,7 +223,7 @@ h1 {
   padding: 10px 0;
 }
 
-.media-card div p {
+.photograph-work__media-title {
   font-weight: 400;
   font-size: 24px;
   line-height: 1;
@@ -229,7 +235,7 @@ h1 {
   height: 31px;
 }
 
-.media-card div span {
+.photograph-work__likes-container {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -237,7 +243,7 @@ h1 {
   gap: 4.62px;
 }
 
-.media-card div span p {
+.photograph-work__likes {
   font-weight: 500;
   font-size: 24px;
   line-height: 1;
@@ -245,15 +251,17 @@ h1 {
   height: 31px;
   display: flex;
   align-items: center;
+  color: #901c1c;
 }
 
-.media-card div span svg {
+.photograph-work__heart-icon {
   color: #901c1c;
   width: 19px;
   height: 19px;
 }
 
-#contact_modal {
+/* Contact Modal */
+.contact-modal {
   display: none;
   position: absolute;
   top: 50%;
@@ -265,8 +273,7 @@ h1 {
   justify-content: center;
   align-items: center;
 }
-
-.modal {
+.contact-modal__content {
   border-radius: 5px;
   background-color: #db8876;
   width: 50%;
@@ -276,54 +283,68 @@ h1 {
   justify-content: space-between;
   padding: 35px;
   margin: auto;
+  gap: 19px;
 }
-
-.modal header {
+.contact-modal__header {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
-
-.modal header img {
+.contact-modal__close-button {
   cursor: pointer;
   width: 42px;
   height: 42px;
 }
-
-.modal header h2 {
+.contact-modal__photographer-name {
   font-size: 64px;
   font-weight: normal;
   text-align: start;
 }
-
-form {
+.contact-modal__form {
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: flex-start;
 }
-
-form label {
-  color: #312e2e;
-  font-size: 36px;
-}
-
-form div {
+.contact-modal__form-group {
   display: flex;
   flex-direction: column;
   width: 100%;
   align-items: self-start;
   margin-bottom: 26px;
 }
-
-form input {
+.contact-modal__label {
+  color: #312e2e;
+  font-size: 36px;
+}
+.contact-modal__input {
   width: 100%;
   height: 68px;
   border: none;
   border-radius: 5px;
 }
+.contact-modal__textarea {
+  width: 100%;
+  height: 170px;
+  border: none;
+  border-radius: 5px;
+}
+.contact-modal__submit-button {
+  width: 170px;
+  height: 69px;
+  border: none;
+  border-radius: 5px;
+  background-color: #901c1c;
+  color: white;
+  font-family: DM Sans;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+}
 
-/* Styles pour la lightbox */
+/* Lightbox */
 .lightbox {
   display: none;
   position: fixed;
@@ -331,17 +352,15 @@ form input {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgb(255 255 255);
   z-index: 1000;
   justify-content: center;
   align-items: center;
 }
-
 .lightbox[aria-hidden="false"] {
   display: flex;
 }
-
-.lightbox-content {
+.lightbox__content {
   max-width: 80%;
   max-height: 80%;
   display: flex;
@@ -349,23 +368,30 @@ form input {
   align-items: center;
   justify-content: center;
 }
-
-.lightbox-media {
-  max-width: 100%;
-  max-height: 70vh;
+.lightbox__content div {
+  background-color: #fff;
+  display: flex;
+  flex-flow: column nowrap;
+  padding-bottom: 12px;
   border-radius: 5px;
 }
-
-.lightbox-title {
-  color: white;
-  font-size: 24px;
-  margin-top: 15px;
-  text-align: center;
+.lightbox__media {
+  max-width: 1050px;
+  max-height: 900px;
+  border-radius: 5px;
+  object-fit: cover;
 }
-
-.lightbox-close,
-.lightbox-prev,
-.lightbox-next {
+.lightbox__title {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #901c1c;
+  margin-top: 12px;
+}
+.lightbox__close,
+.lightbox__prev,
+.lightbox__next {
   position: absolute;
   background: none;
   border: none;
@@ -373,30 +399,28 @@ form input {
   font-size: 36px;
   cursor: pointer;
   z-index: 1001;
+  display: flex;
 }
-
-.lightbox-close {
+.lightbox__close {
   top: 20px;
   right: 20px;
 }
-
-.lightbox-prev {
+.lightbox__prev {
   top: 50%;
   left: 20px;
   transform: translateY(-50%);
 }
-
-.lightbox-next {
+.lightbox__next {
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
 }
-
-.lightbox-close:focus,
-.lightbox-prev:focus,
-.lightbox-next:focus {
-  outline: 2px solid white;
+.lightbox__close:focus,
+.lightbox__prev:focus,
+.lightbox__next:focus {
+  outline: 2px solid #901c1c;
   outline-offset: 2px;
+  border-radius: 5px;
 }
 
 /* Appliquer les mêmes styles pour :hover et :focus */
@@ -420,4 +444,119 @@ form input {
   border-radius: 5px; /* Coins arrondis pour un design moderne */
   max-width: 600px; /* Limite la largeur pour un affichage optimal */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour un effet visuel */
+}
+
+/* Custom Sort */
+#custom-sort {
+  position: relative;
+  display: inline-block;
+  width: 170px;
+}
+
+#custom-sort:focus-within {
+  outline: 2px solid #901c1c;
+  outline-offset: 4px; /* Décalage du contour pour éviter qu'il touche le contenu */
+  border-radius: 5px; /* Coins arrondis pour correspondre au design */
+}
+
+.custom-sort__button {
+  width: 170px;
+  height: 69px;
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+  background-color: #901c1c;
+  border: none; /* Assurez-vous qu'il n'y a pas de bordure qui masque le contenu */
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-sort__button[aria-expanded="true"] {
+  border-radius: 5px 5px 0 0;
+}
+
+.custom-sort__button[aria-expanded="true"] .custom-sort__button-icon {
+  transform: rotate(180deg);
+}
+
+.custom-sort__button-text {
+  flex-grow: 1;
+  text-align: left;
+  width: 100%;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 23px;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.custom-sort__button-icon {
+  margin-left: 10px;
+  flex-shrink: 0;
+  width: 16px; /* Assurez-vous que la taille est correcte */
+  height: 11px;
+  fill: white; /* Assurez-vous que la couleur est bien définie */
+}
+
+.custom-sort__button:focus {
+  outline: none;
+  border-color: #901c1c;
+}
+
+.custom-sort__options {
+  position: absolute;
+  top: 66px;
+  left: 0;
+  width: 100%;
+  background-color: #901c1c;
+  display: none;
+  z-index: 10;
+  border-radius: 0 0 5px 5px;
+  padding-bottom: 6px;
+  box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 1);
+}
+
+.custom-sort__options[aria-hidden="false"] {
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-sort__option {
+  padding: 14px 20px;
+  text-align: left;
+  width: 100%;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 23px;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.custom-sort__option::before {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 1px;
+  background-color: #fff;
+  transform: translate(-10px, -14px);
+}
+
+.custom-sort__option:hover,
+.custom-sort__option:focus {
+  background-color: #901c1c;
+  color: #fff;
+}
+
+.custom-sort__option.selected {
+  background-color: #901c1c;
+  color: #fff;
+  font-weight: bold; /* Met en évidence l'option présélectionnée */
 }

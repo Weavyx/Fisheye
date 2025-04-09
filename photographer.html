@@ -10,58 +10,85 @@
 </head>
 
 <body>
-  <header>
-    <a href="index.html" aria-label="Retour à la page d'accueil">
-      <img src="assets/images/logo.png" class="logo" alt="Logo de Fisheye" />
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" inert aria-hidden="true" style="display: none;">
+    <button class="lightbox__close" aria-label="Fermer la lightbox">
+      <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M42 4.23L37.77 0L21 16.77L4.23 0L0 4.23L16.77 21L0 37.77L4.23 42L21 25.23L37.77 42L42 37.77L25.23 21L42 4.23Z"
+          fill="#911C1C" />
+      </svg>
+    </button>
+    <button class="lightbox__prev" aria-label="Média précédent">
+      <svg width="30" height="48" viewBox="0 0 30 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M29.6399 42.36L11.3199 24L29.6399 5.64L23.9999 -2.46532e-07L-0.000107861 24L23.9999 48L29.6399 42.36Z"
+          fill="#911C1C" />
+      </svg>
+    </button>
+    <div class="lightbox__content"></div>
+    <button class="lightbox__next" aria-label="Média suivant">
+      <svg width="30" height="48" viewBox="0 0 30 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.360108 5.64L18.6801 24L0.360107 42.36L6.00011 48L30.0001 24L6.00011 3.88195e-06L0.360108 5.64Z"
+          fill="#911C1C" />
+      </svg>
+    </button>
+  </div>
+  <header class="header">
+    <a href="index.html" class="header__logo-link" aria-label="Retour à la page d'accueil">
+      <img src="assets/images/logo.png" class="header__logo" alt="Logo de Fisheye" />
     </a>
   </header>
-  <main id="main">
-    <section class="photograph-header" aria-labelledby="photograph-header-title">
-      <h1 id="photograph-header-title" class="sr-only">Détails du photographe</h1>
-      <button class="open-contact-button" id="contact-button" aria-label="Ouvrir le formulaire de contact">
+  <main id="main" class="main">
+    <section id="photograph-header" aria-labelledby="photograph-header__title">
+      <h1 id="photograph-header__title" class="sr-only">Détails du photographe</h1>
+      <button class="photograph-header__contact-button" id="contact-button"
+        aria-label="Ouvrir le formulaire de contact">
         Contactez-moi
       </button>
     </section>
-    <section id="photograph-work" aria-label="Galerie des travaux du photographe">
-      <div class="sorting" aria-label="Options de tri">
-        <label for="sort-select">Trier par</label>
-        <select id="sort-select" aria-label="Trier les médias">
-          <option value="popularite">Popularité</option>
-          <option value="date">Date</option>
-          <option value="titre">Titre</option>
-        </select>
+    <section id="photograph-work" class="photograph-work" aria-label="Galerie des travaux du photographe">
+      <div class="photograph-work__sorting" aria-label="Options de tri">
+        <label for="sort-select" class="photograph-work__sorting-label">Trier par</label>
+        <div id="custom-sort" class="custom-sort" role="listbox" aria-label="Trier les médias">
+          <button class="custom-sort__button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="custom-sort__button-text">Popularité</span>
+            <svg class="custom-sort__button-icon" width="16" height="11" viewBox="0 0 16 11" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.12 0.453125L8 6.55979L1.88 0.453125L0 2.33312L8 10.3331L16 2.33312L14.12 0.453125Z"
+                fill="white" />
+            </svg>
+          </button>
+          <div class="custom-sort__options" role="menu" aria-hidden="true">
+            <div class="custom-sort__option" role="option" data-value="popularite" tabindex="0">Popularité</div>
+            <div class="custom-sort__option" role="option" data-value="date" tabindex="0">Date</div>
+            <div class="custom-sort__option" role="option" data-value="titre" tabindex="0">Titre</div>
+          </div>
+        </div>
       </div>
-      <div class="work-container" role="list"></div>
+      <div class="photograph-work__container" role="list"></div>
     </section>
   </main>
-  <div id="contact_modal" role="dialog" aria-labelledby="contact-modal-title" aria-hidden="true">
-    <div class="modal">
-      <header>
-        <h2 id="contact-modal-title" class="photographer-name">Contactez-moi</h2>
-        <img src="assets/icons/close.svg" class="close-button" alt="Fermer le formulaire" role="button" tabindex="0">
+  <div id="contact_modal" class="contact-modal" role="dialog" aria-labelledby="contact-modal__title" aria-hidden="true">
+    <div class="contact-modal__content">
+      <header class="contact-modal__header">
+        <h2 id="contact-modal__title" class="contact-modal__photographer-name">Contactez-moi</h2>
+        <img src="assets/icons/close.svg" class="contact-modal__close-button" alt="Fermer le formulaire" role="button"
+          tabindex="0">
       </header>
-      <form id="contact_form" method="POST" aria-label="Formulaire de contact">
-        <div>
-          <label>Prénom</label>
-          <input type="text" name="prenom" id="prenom">
-          <label>Nom</label>
-          <input type="text" name="nom" id="nom">
-          <label>Email</label>
-          <input type="email" name="email" id="email">
-          <label>Votre message</label>
-          <textarea name="message" id="message" rows="5"></textarea>
+      <form id="contact_form" class="contact-modal__form" method="POST" aria-label="Formulaire de contact">
+        <div class="contact-modal__form-group">
+          <label class="contact-modal__label">Prénom</label>
+          <input type="text" name="prenom" id="prenom" class="contact-modal__input">
+          <label class="contact-modal__label">Nom</label>
+          <input type="text" name="nom" id="nom" class="contact-modal__input">
+          <label class="contact-modal__label">Email</label>
+          <input type="email" name="email" id="email" class="contact-modal__input">
+          <label class="contact-modal__label">Votre message</label>
+          <textarea name="message" id="message" rows="5" class="contact-modal__textarea"></textarea>
         </div>
-        <button class="submit-contact-button">Envoyer</button>
+        <button class="contact-modal__submit-button">Envoyer</button>
       </form>
     </div>
-  </div>
-
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox" aria-hidden="true">
-    <button class="lightbox-close" aria-label="Fermer la lightbox">&times;</button>
-    <button class="lightbox-prev" aria-label="Média précédent">&#10094;</button>
-    <div class="lightbox-content"></div>
-    <button class="lightbox-next" aria-label="Média suivant">&#10095;</button>
   </div>
 
   <script type="module" src="./scripts/app.js"></script>
