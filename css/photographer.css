@@ -1,10 +1,33 @@
+@font-face {
+  font-family: "DM Sans local";
+  src: url("../assets/DM_Sans/DMSans-VariableFont_opsz,wght.ttf")
+    format("truetype-variations");
+  font-weight: 100 900;
+}
+
+/* Définition des variables de couleurs */
+:root {
+  --color-primary: #901c1c;
+  --color-secondary: #db8876;
+  --color-light: #fafafa;
+  --color-dark: #312e2e;
+  --color-error: #d9534f;
+  --color-error-bg: #f8d7da;
+  --color-error-border: #f5c6cb;
+  --color-neutral: #525252;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray: #757575;
+  --color-shadow: rgba(0, 0, 0, 0.1);
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: DM Sans;
+  font-family: "DM Sans local", IMPACT;
 }
 
 #sticky-info-box {
@@ -12,7 +35,7 @@
   bottom: 0;
   right: 36px;
   padding: 21px 34px 16px 34px;
-  background-color: #db8876;
+  background-color: var(--color-secondary);
   border-radius: 5px 5px 0 0;
   display: flex;
   flex-flow: row nowrap;
@@ -34,7 +57,7 @@
   font-size: 24px;
   line-height: 24px;
   letter-spacing: 0;
-  color: #000;
+  color: var(--color-black);
 }
 
 #sticky-info-box .sticky-info-box__price {
@@ -61,7 +84,7 @@
 }
 
 .header__logo-link:focus {
-  outline: 2px solid #901c1c; /* Couleur et épaisseur du contour */
+  outline: 2px solid var(--color-primary); /* Couleur et épaisseur du contour */
   outline-offset: 5px; /* Décalage du contour pour éviter qu'il touche le contenu */
   border-radius: 5px; /* Coins arrondis pour correspondre au design */
 }
@@ -75,11 +98,12 @@
 
 /* Photograph Header */
 #photograph-header {
-  background-color: #fafafa;
+  background-color: var(--color-light);
   height: 313px;
   padding: 0 100px;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
   align-items: center;
   width: 100%;
 }
@@ -99,46 +123,45 @@
 .photograph-header__name {
   font-weight: 400;
   font-size: 64px;
-  line-height: 1;
+  line-height: 83px;
   letter-spacing: 0;
-  height: 83px;
-  color: #d3573c;
+  color: var(--color-secondary);
 }
 .photograph-header__location {
   font-weight: 400;
   font-size: 24px;
-  line-height: 1;
+  line-height: 31px;
   letter-spacing: 0;
   display: inline;
-  color: #901c1c;
+  color: var(--color-primary);
 }
 .photograph-header__tagline {
   font-weight: 400;
   font-size: 18px;
-  line-height: 1;
+  line-height: 23px;
   letter-spacing: 0;
   display: inline;
-  color: #525252;
+  color: var(--color-neutral);
 }
 .photograph-header__contact-button {
-  color: white;
-  padding: 11px;
+  color: var(--color-white);
+  padding: 0 11px;
   width: 170px;
+  height: 69px;
   border: none;
-  background-color: #901c1c;
+  background-color: var(--color-primary);
   border-radius: 5px;
   cursor: pointer;
   font-weight: 700;
   font-size: 20px;
-  line-height: 69px;
+  line-height: 26px;
   letter-spacing: 0;
-  text-align: center;
-  vertical-align: middle;
+  font-variation-settings: "wght" 700, "opsz" 27;
 }
-.photograph-header__contact-button:focus {
-  outline: 2px solid #901c1c; /* Couleur et épaisseur du contour */
-  outline-offset: 4px; /* Décalage du contour pour éviter qu'il touche le contenu */
-  border-radius: 5px; /* Coins arrondis pour correspondre au design */
+.photograph-header__contact-button:focus,
+.photograph-header__contact-button:hover {
+  color: var(--color-black);
+  background-color: var(--color-secondary);
 }
 .photograph-header__right {
   width: 200px;
@@ -226,13 +249,12 @@
 .photograph-work__media-title {
   font-weight: 400;
   font-size: 24px;
-  line-height: 1;
+  line-height: 31px;
   letter-spacing: 0;
-  color: #901c1c;
+  color: var(--color-primary);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  height: 31px;
 }
 
 .photograph-work__likes-container {
@@ -246,18 +268,21 @@
 .photograph-work__likes {
   font-weight: 500;
   font-size: 24px;
-  line-height: 1;
+  line-height: 31px;
   letter-spacing: 0;
-  height: 31px;
   display: flex;
   align-items: center;
-  color: #901c1c;
+  color: var(--color-primary);
 }
 
 .photograph-work__heart-icon {
-  color: #901c1c;
+  color: var(--color-primary);
   width: 19px;
   height: 19px;
+}
+
+.photograph-work__heart-icon.liked {
+  fill: var(--color-primary);
 }
 
 /* Contact Modal */
@@ -275,7 +300,7 @@
 }
 .contact-modal__content {
   border-radius: 5px;
-  background-color: #db8876;
+  background-color: var(--color-secondary);
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -314,7 +339,7 @@
   margin-bottom: 26px;
 }
 .contact-modal__label {
-  color: #312e2e;
+  color: var(--color-dark);
   font-size: 36px;
 }
 .contact-modal__input {
@@ -329,19 +354,36 @@
   border: none;
   border-radius: 5px;
 }
+
+.contact-modal__input,
+.contact-modal__textarea {
+  font-family: "DM Sans local", sans-serif;
+  font-size: 22px;
+  color: var(--color-dark);
+  padding: 10px;
+  font-weight: 400;
+  line-height: 25px;
+  letter-spacing: 0;
+}
+
 .contact-modal__submit-button {
   width: 170px;
-  height: 69px;
   border: none;
   border-radius: 5px;
-  background-color: #901c1c;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   font-family: DM Sans;
   font-weight: 700;
   font-size: 18px;
-  line-height: 100%;
+  line-height: 69px;
   letter-spacing: 0%;
   text-align: center;
+}
+
+.contact-modal__submit-button:focus,
+.contact-modal__submit-button:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-black);
 }
 
 /* Lightbox */
@@ -352,7 +394,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(255 255 255);
+  background-color: var(--color-white);
   z-index: 1000;
   justify-content: center;
   align-items: center;
@@ -369,7 +411,7 @@
   justify-content: center;
 }
 .lightbox__content div {
-  background-color: #fff;
+  background-color: var(--color-white);
   display: flex;
   flex-flow: column nowrap;
   padding-bottom: 12px;
@@ -384,9 +426,9 @@
 .lightbox__title {
   font-weight: 400;
   font-size: 24px;
-  line-height: 100%;
+  line-height: 31px;
   letter-spacing: 0%;
-  color: #901c1c;
+  color: var(--color-primary);
   margin-top: 12px;
 }
 .lightbox__close,
@@ -395,7 +437,7 @@
   position: absolute;
   background: none;
   border: none;
-  color: white;
+  color: var(--color-white);
   font-size: 36px;
   cursor: pointer;
   z-index: 1001;
@@ -418,7 +460,7 @@
 .lightbox__close:focus,
 .lightbox__prev:focus,
 .lightbox__next:focus {
-  outline: 2px solid #901c1c;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 5px;
 }
@@ -427,23 +469,25 @@
 #sort-select:hover,
 #sort-select:focus {
   outline: none; /* Supprime le contour par défaut */
-  border: 2px solid #901c1c; /* Ajoute une bordure pour indiquer la sélection */
+  border: 2px solid var(--color-primary); /* Ajoute une bordure pour indiquer la sélection */
   background-color: #f8f8f8; /* Change la couleur de fond pour correspondre au hover */
   color: #333; /* Change la couleur du texte si nécessaire */
 }
 
 /* Style de base pour le message d'erreur */
 .error-message {
-  color: #d9534f; /* Rouge pour signaler une erreur */
-  background-color: #f8d7da; /* Fond clair pour une meilleure lisibilité */
-  border: 1px solid #f5c6cb; /* Bordure pour délimiter le message */
+  color: var(--color-error); /* Rouge pour signaler une erreur */
+  background-color: var(
+    --color-error-bg
+  ); /* Fond clair pour une meilleure lisibilité */
+  border: 1px solid var(--color-error-border); /* Bordure pour délimiter le message */
   padding: 15px; /* Espacement interne pour un affichage propre */
   margin: 20px auto; /* Espacement externe pour centrer le message */
   text-align: center; /* Centrer le texte */
   font-size: 1.2em; /* Taille de police légèrement augmentée */
   border-radius: 5px; /* Coins arrondis pour un design moderne */
   max-width: 600px; /* Limite la largeur pour un affichage optimal */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour un effet visuel */
+  box-shadow: 0 2px 4px var(--color-shadow); /* Légère ombre pour un effet visuel */
 }
 
 /* Custom Sort */
@@ -454,7 +498,7 @@
 }
 
 #custom-sort:focus-within {
-  outline: 2px solid #901c1c;
+  outline: 2px solid var(--color-primary);
   outline-offset: 4px; /* Décalage du contour pour éviter qu'il touche le contenu */
   border-radius: 5px; /* Coins arrondis pour correspondre au design */
 }
@@ -469,7 +513,7 @@
   padding: 0 20px;
   position: relative;
   z-index: 1;
-  background-color: #901c1c;
+  background-color: var(--color-primary);
   border: none; /* Assurez-vous qu'il n'y a pas de bordure qui masque le contenu */
   border-radius: 5px;
   cursor: pointer;
@@ -490,7 +534,7 @@
   font-weight: 700;
   font-size: 18px;
   line-height: 23px;
-  color: #ffffff;
+  color: var(--color-white);
   border-radius: 5px;
   cursor: pointer;
   text-align: left;
@@ -501,12 +545,12 @@
   flex-shrink: 0;
   width: 16px; /* Assurez-vous que la taille est correcte */
   height: 11px;
-  fill: white; /* Assurez-vous que la couleur est bien définie */
+  fill: var(--color-white); /* Assurez-vous que la couleur est bien définie */
 }
 
 .custom-sort__button:focus {
   outline: none;
-  border-color: #901c1c;
+  /* border-color: var(--color-primary); */
 }
 
 .custom-sort__options {
@@ -514,12 +558,12 @@
   top: 66px;
   left: 0;
   width: 100%;
-  background-color: #901c1c;
+  background-color: var(--color-primary);
   display: none;
   z-index: 10;
   border-radius: 0 0 5px 5px;
   padding-bottom: 6px;
-  box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 1);
+  box-shadow: 0px 10px 10px -10px var(--color-shadow);
 }
 
 .custom-sort__options[aria-hidden="false"] {
@@ -534,7 +578,7 @@
   font-weight: 700;
   font-size: 18px;
   line-height: 23px;
-  color: #ffffff;
+  color: var(--color-white);
   border-radius: 5px;
   cursor: pointer;
   text-align: left;
@@ -545,18 +589,18 @@
   display: block;
   width: 150px;
   height: 1px;
-  background-color: #fff;
+  background-color: var(--color-white);
   transform: translate(-10px, -14px);
 }
 
 .custom-sort__option:hover,
 .custom-sort__option:focus {
-  background-color: #901c1c;
-  color: #fff;
+  background-color: var(--color-primary);
+  color: var(--color-white);
 }
 
 .custom-sort__option.selected {
-  background-color: #901c1c;
-  color: #fff;
-  font-weight: bold; /* Met en évidence l'option présélectionnée */
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-weight: bold;
 }

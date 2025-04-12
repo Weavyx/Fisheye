@@ -111,11 +111,13 @@ export class EventManager {
       button.setAttribute("aria-expanded", newState);
       optionsContainer.setAttribute("aria-hidden", !newState);
 
-      // Active ou désactive inert en fonction de l'état du menu
+      // Active ou désactive inert et gère le focus
       if (newState) {
         optionsContainer.removeAttribute("inert");
+        options.forEach((option) => option.setAttribute("tabindex", "0")); // Rendre les options focusables
       } else {
         optionsContainer.setAttribute("inert", "");
+        options.forEach((option) => option.setAttribute("tabindex", "-1")); // Empêcher le focus sur les options
       }
     };
 

@@ -1,7 +1,7 @@
 import { FactoryManager } from "../utils/FactoryManager.js";
 import { createPhotographerCard } from "./components/PhotographerCardFactory.js";
 import { createMediaCard } from "./components/MediaCardFactory.js";
-import { createPhotographerBanner } from "./components/PhotographerBannerFactory.js";
+import { createPhotographerHeader } from "./components/PhotographerHeaderFactory.js";
 import { createStickyInfoBox } from "./components/StickyInfoBoxFactory.js";
 import { createLightbox } from "./components/LightboxFactory.js";
 import { createContactModal } from "./components/ContactModalFactory.js";
@@ -25,8 +25,8 @@ export class AppView {
     factoryManager.registerFactory("photographerCard", createPhotographerCard);
     factoryManager.registerFactory("mediaCard", createMediaCard);
     factoryManager.registerFactory(
-      "photographerBanner",
-      createPhotographerBanner
+      "createPhotographerHeader",
+      createPhotographerHeader
     );
     factoryManager.registerFactory("stickyInfoBox", createStickyInfoBox);
     factoryManager.registerFactory("lightbox", createLightbox);
@@ -59,16 +59,17 @@ export class AppView {
    * @param {Object} photographerInfo - Les données du photographe.
    * @returns {void}
    */
-  displayPhotographerBanner(photographerInfo) {
-    const photographerBannerElement = this.factoryManager.create(
-      "photographerBanner",
-      photographerInfo
-    );
-    const bannerContainer = document.getElementById("photograph-header");
-    bannerContainer.innerHTML = "";
-    bannerContainer.appendChild(photographerBannerElement);
+  displayPhotographerHeader(photographerInfo) {
+    const photographerHeaderElement =
+      document.getElementById("photograph-header");
+    photographerHeaderElement.innerHTML = "";
 
-    const contactButtonElement = bannerContainer.querySelector(
+    this.factoryManager.create("createPhotographerHeader", {
+      photographerInfo: photographerInfo,
+      photographerHeaderElement: photographerHeaderElement,
+    });
+
+    const contactButtonElement = photographerHeaderElement.querySelector(
       ".photograph-header__contact-button"
     );
     contactButtonElement.addEventListener("click", () => {
@@ -108,6 +109,7 @@ export class AppView {
         "mediaCard",
         mediaData
       );
+
       worksContainerElement.appendChild(mediaCardElement); // Ajouter le média à la section des travaux
       // Ajouter un gestionnaire d'événements pour les likes
       this.attachLikeEvent(mediaData, mediaCardElement, photographerInfo);

@@ -46,16 +46,27 @@ export class AppController {
             photographerInfo
           );
           photographersSectionElement.appendChild(photographerCard);
-
           // Ajout des événements via l'eventManager
-          this.eventManager.addEvent(photographerCard, "click", () => {
-            window.location.href = `photographer.html?id=${photographerInfo.id}`;
-          });
-          this.eventManager.addEvent(photographerCard, "keydown", (event) => {
-            if (event.key === "Enter") {
+          const photographerCardSectionHeader = photographerCard.querySelector(
+            ".photographer-section__header"
+          );
+
+          this.eventManager.addEvent(
+            photographerCardSectionHeader,
+            "click",
+            () => {
               window.location.href = `photographer.html?id=${photographerInfo.id}`;
             }
-          });
+          );
+          this.eventManager.addEvent(
+            photographerCardSectionHeader,
+            "keydown",
+            (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                window.location.href = `photographer.html?id=${photographerInfo.id}`;
+              }
+            }
+          );
         });
       })
       .catch((error) => {
@@ -77,7 +88,7 @@ export class AppController {
     this.model
       .fetchPhotographerById(photographerId)
       .then((photographerInfo) => {
-        this.view.displayPhotographerBanner(photographerInfo);
+        this.view.displayPhotographerHeader(photographerInfo);
 
         return this.model
           .fetchPhotographerMediaAndLikes(photographerId)

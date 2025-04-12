@@ -1,4 +1,25 @@
-@import url("photographer.css");
+@font-face {
+  font-family: "DM Sans local";
+  src: url("../assets/DM_Sans/DMSans-VariableFont_opsz,wght.ttf")
+    format("truetype-variations");
+  font-weight: 100 900;
+}
+
+/* Définition des variables de couleurs */
+:root {
+  --color-primary: #901c1c;
+  --color-secondary: #d3573c;
+  --color-light: #fafafa;
+  --color-dark: #312e2e;
+  --color-error: #d9534f;
+  --color-error-bg: #f8d7da;
+  --color-error-border: #f5c6cb;
+  --color-neutral: #525252;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray: #757575;
+  --color-shadow: rgba(0, 0, 0, 0.1);
+}
 
 *,
 *::before,
@@ -6,10 +27,7 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-}
-
-body {
-  font-family: "DM Sans", sans-serif;
+  font-family: "DM Sans local", sans-serif;
 }
 
 /* Header */
@@ -21,18 +39,26 @@ body {
   height: 90px;
   padding-top: 42px;
 }
-.header__logo {
-  height: 50px;
+.header__logo-link {
   margin-left: 100px;
 }
+.header__logo {
+  height: 50px;
+}
+
+.header__logo-link:focus {
+  outline: 2px solid var(--color-primary); /* Couleur et épaisseur du contour */
+  outline-offset: 5px; /* Décalage du contour pour éviter qu'il touche le contenu */
+  border-radius: 5px; /* Coins arrondis pour correspondre au design */
+}
 .header__title {
-  color: #901c1c;
+  color: var(--color-primary);
   margin-right: 100px;
   height: 47px;
   margin-top: 2px;
   font-weight: 400;
   font-size: 36px;
-  line-height: 1;
+  line-height: 47px;
   letter-spacing: 0;
 }
 
@@ -54,27 +80,27 @@ body {
   column-gap: 20px;
   width: 100%;
 }
-.photographer-section__article {
-  justify-self: center;
+
+.photographer-section__article,
+.photographer-section__header,
+.photographer-section__details {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-flow: column nowrap;
 }
+
 .photographer-section__article .photographer-section__frame {
   height: 200px;
   width: 200px;
   border-radius: 100%;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 10px var(--color-shadow);
   overflow: hidden;
   position: relative;
 }
 .photographer-section__img {
   width: 526px;
   height: 358px;
-}
-
-.portrait--horizontal {
   object-fit: contain;
   transform: translate(-50%, -42%);
   position: absolute;
@@ -82,54 +108,40 @@ body {
   left: 50%;
 }
 
-.portrait--vertical {
-  width: 400px;
-  height: 200px;
-  transform: translate(-50%, -50%);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  object-fit: contain;
-}
-
 .photographer-section__article .photographer-section__name {
-  color: #d3573c;
+  color: var(--color-secondary);
   font-weight: 400;
   font-size: 36px;
-  line-height: 1;
+  line-height: 47px;
   letter-spacing: 0;
   text-align: center;
   margin-top: 20px;
-  height: 47px;
 }
 .photographer-section__article .photographer-section__location {
+  color: var(--color-primary);
   font-weight: 400;
   font-size: 13px;
-  line-height: 1;
+  line-height: 17px;
   letter-spacing: 0;
   text-align: center;
-  color: #901c1c;
-  height: 17px;
 }
 .photographer-section__article .photographer-section__tagline {
+  color: var(--color-black);
   font-weight: 400;
   font-size: 10px;
-  line-height: 1;
+  line-height: 13px;
   letter-spacing: 0;
   text-align: center;
-  color: #000000;
   margin-top: 3px;
-  height: 13px;
 }
 .photographer-section__article .photographer-section__price {
+  color: var(--color-gray);
   font-weight: 400;
   font-size: 9px;
-  line-height: 1;
+  line-height: 12px;
   letter-spacing: 0;
   text-align: center;
-  color: #757575;
   margin-top: 3px;
-  height: 12px;
 }
 
 /* Accessibility */
@@ -137,29 +149,28 @@ body {
   cursor: pointer;
 }
 .photographer-card:focus {
-  outline: 2px solid #901c1c;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 .media {
   cursor: pointer;
 }
 .media:focus {
-  outline: 2px solid #901c1c;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-/* Error Message */
 .error-message {
-  color: #d9534f; /* Rouge pour signaler une erreur */
-  background-color: #f8d7da; /* Fond clair pour une meilleure lisibilité */
-  border: 1px solid #f5c6cb; /* Bordure pour délimiter le message */
-  padding: 15px; /* Espacement interne pour un affichage propre */
-  margin: 20px auto; /* Espacement externe pour centrer le message */
-  text-align: center; /* Centrer le texte */
-  font-size: 1.2em; /* Taille de police légèrement augmentée */
-  border-radius: 5px; /* Coins arrondis pour un design moderne */
-  max-width: 600px; /* Limite la largeur pour un affichage optimal */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour un effet visuel */
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  padding: 15px;
+  margin: 20px auto;
+  text-align: center;
+  font-size: 1.2em;
+  border-radius: 5px;
+  max-width: 600px;
+  box-shadow: 0 2px 4px var(--color-shadow);
 }
 
 .submit-contact-button {
