@@ -11,8 +11,8 @@ export function createPhotographerHeader(data) {
       <p id="photographer-tagline" class="photograph-header__tagline" tabindex="0">${tagline}</p>
     </div>
     <button class="photograph-header__contact-button" aria-label="Contactez le photographe ${name}" tabindex="0">Contactez-moi</button>
-    <div class="photograph-header__right" id="photographer-description">
-      <img src="${picturePath}" alt="Portrait de ${name}" aria-describedby="photographer-description" tabindex="0" />
+    <div class="photograph-header__right" id="photographer-description"  tabindex="0" aria-label="${name}">
+      <img src="${picturePath}" alt="" aria-describedby="photographer-description" />
     </div>
   `;
 

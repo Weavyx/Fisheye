@@ -13,10 +13,10 @@ export function createPhotographerCard(data) {
       <div class="photographer-section__frame"></div>
       <h2 class="photographer-section__name">${name}</h2>
     </div>
-    <div class="photographer-section__details">
-      <p class="photographer-section__location" tabindex="0">${city}, ${country}</p>
-      <p class="photographer-section__tagline" tabindex="0">${tagline}</p>
-      <p class="photographer-section__price" tabindex="0">${price}€/jour</p>
+    <div class="photographer-section__details" role="region" aria-label="Détails du photographe" tabindex="0">
+      <p class="photographer-section__location" tabindex="0" aria-label="Localisation : ${city}, ${country}">${city}, ${country}</p>
+      <p class="photographer-section__tagline" tabindex="0" aria-label="Slagan : ${tagline}">${tagline}</p>
+      <p class="photographer-section__price" tabindex="0" aria-label="Prix : ${price}€/jour">${price}€/jour</p>
     </div>
   `;
 

@@ -34,21 +34,16 @@
     </button>
   </div>
   <header class="header">
-    <a href="index.html" class="header__logo-link" aria-label="Retour à la page d'accueil">
+    <a href="index.html" class="header__logo-link" aria-label="Fisheye Home page">
       <img src="assets/images/logo.png" class="header__logo" alt="Logo de Fisheye" />
     </a>
   </header>
   <main id="main" class="main">
-    <section id="photograph-header" aria-labelledby="photograph-header__title">
-      <h1 id="photograph-header__title" class="sr-only">Détails du photographe</h1>
-      <button class="photograph-header__contact-button" id="contact-button"
-        aria-label="Ouvrir le formulaire de contact">
-        Contactez-moi
-      </button>
-    </section>
+    <section id="photograph-header" aria-labelledby="photograph-header" role="region" tabindex="0"
+      aria-label="Détails du photographe et contact"></section>
     <section id="photograph-work" class="photograph-work" aria-label="Galerie des travaux du photographe">
       <div class="photograph-work__sorting" aria-label="Options de tri">
-        <label for="sort-select" class="photograph-work__sorting-label">Trier par</label>
+        <label for="custom-sort" class="photograph-work__sorting-label">Trier par</label>
         <div id="custom-sort" class="custom-sort" role="listbox" aria-label="Trier les médias">
           <button class="custom-sort__button" aria-haspopup="listbox" aria-expanded="false">
             <span class="custom-sort__button-text">Popularité</span>

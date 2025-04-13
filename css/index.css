@@ -5,7 +5,6 @@
   font-weight: 100 900;
 }
 
-/* Définition des variables de couleurs */
 :root {
   --color-primary: #901c1c;
   --color-secondary: #d3573c;
@@ -47,9 +46,9 @@
 }
 
 .header__logo-link:focus {
-  outline: 2px solid var(--color-primary); /* Couleur et épaisseur du contour */
-  outline-offset: 5px; /* Décalage du contour pour éviter qu'il touche le contenu */
-  border-radius: 5px; /* Coins arrondis pour correspondre au design */
+  outline: 2px solid var(--color-primary);
+  outline-offset: 5px;
+  border-radius: 5px;
 }
 .header__title {
   color: var(--color-primary);
