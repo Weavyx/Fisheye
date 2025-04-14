@@ -186,7 +186,7 @@
   justify-content: flex-start;
   align-items: start;
   width: 100%;
-  padding-top: 9px;
+  padding: 9px 0 65px 0;
 }
 .photograph-work__sorting {
   display: flex;

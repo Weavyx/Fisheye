@@ -28,12 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const photographerId = urlParams.get("id");
 
       app.renderPhotographerPage(photographerId);
-
-      // Initialiser les événements spécifiques à photographer.html
-      app.initializePhotographerPageEvents();
-
-      // Attacher les événements de la lightbox
-      app.eventManager.attachLightboxEvents();
     }
   } catch (error) {
     console.error(

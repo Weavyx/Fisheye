@@ -1,6 +1,10 @@
 export class FactoryManager {
   constructor() {
+    if (FactoryManager.instance) {
+      return FactoryManager.instance;
+    }
     this.factories = {};
+    FactoryManager.instance = this;
   }
 
   /**
