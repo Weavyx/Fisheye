@@ -4,11 +4,13 @@
  */
 export class AppController {
   /**
-   * Crée une instance de Controller.
+   * Crée une instance unique de Controller.
    *
    * @param {Model} model - L'instance du modèle.
    * @param {View} view - L'instance de la vue.
    * @param {EventManager} eventManager - L'instance du gestionnaire d'événements.
+   *
+   * @returns {void}
    */
   constructor(model, view, eventManager) {
     if (AppController.instance) {
@@ -41,31 +43,9 @@ export class AppController {
           ".photographer-section"
         );
         photographerList.forEach((photographerInfo) => {
-          const photographerCard = this.view.factoryManager.create(
-            "photographerCard",
-            photographerInfo
-          );
-          photographersSectionElement.appendChild(photographerCard);
-          // Ajout des événements via l'eventManager
-          const photographerCardSectionHeader = photographerCard.querySelector(
-            ".photographer-section__header"
-          );
-
-          this.eventManager.addEvent(
-            photographerCardSectionHeader,
-            "click",
-            () => {
-              window.location.href = `photographer.html?id=${photographerInfo.id}`;
-            }
-          );
-          this.eventManager.addEvent(
-            photographerCardSectionHeader,
-            "keydown",
-            (event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                window.location.href = `photographer.html?id=${photographerInfo.id}`;
-              }
-            }
+          this.view.displayPhotographerCard(
+            photographerInfo,
+            photographersSectionElement
           );
         });
       })
@@ -94,7 +74,7 @@ export class AppController {
           .fetchPhotographerMediaAndLikes(photographerId)
           .then(({ media: mediaList, totalLikes }) => {
             // Stocker la liste des médias dans le contrôleur
-            this.mediaList = mediaList;
+            this.model.mediaList = mediaList;
 
             this.model.updatePhotographerLikes(photographerInfo, totalLikes);
 

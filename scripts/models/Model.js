@@ -6,11 +6,16 @@ import { Media } from "./Media.js";
  * Gère les données et leur manipulation.
  */
 export class AppModel {
+  /**
+   * Crée une instance unique de AppModel.
+   * @returns {void}
+   */
   constructor() {
     if (AppModel.instance) {
       return AppModel.instance;
     }
     this.photographers = [];
+    this.mediaList = [];
     AppModel.instance = this;
   }
 

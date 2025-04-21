@@ -2,11 +2,11 @@
 <html lang="fr">
 
 <head>
-  <meta charset="utf-8" />
-  <link rel="icon" type="image/png" href="assets/favicon.png" />
-  <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet" />
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no'>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
   <title>Fisheye - photographe</title>
-  <link rel="stylesheet" href="./css/photographer.css" />
+  <link rel="stylesheet" href="./css/photographer-page.min.css" type="text/css">
 </head>
 
 <body>
@@ -15,42 +15,42 @@
     <button class="lightbox__close" aria-label="Fermer la lightbox">
       <svg width="42" height="42" viewBox="0 0 42 42" stroke="none" xmlns="http://www.w3.org/2000/svg">
         <path
-          d="M42 4.23L37.77 0L21 16.77L4.23 0L0 4.23L16.77 21L0 37.77L4.23 42L21 25.23L37.77 42L42 37.77L25.23 21L42 4.23Z"
-          stroke="#911C1C" />
+          d="M42 4.23L37.77 0L21 16.77L4.23 0L0 4.23L16.77 21L0 37.77L4.23 42L21 25.23L37.77 42L42 37.77L25.23 21L42 4.23Z">
       </svg>
     </button>
     <button class="lightbox__prev" aria-label="Média précédent">
       <svg width="30" height="48" viewBox="0 0 30 48" stroke="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M29.6399 42.36L11.3199 24L29.6399 5.64L23.9999 -2.46532e-07L-0.000107861 24L23.9999 48L29.6399 42.36Z"
-          stroke="#911C1C" />
+        <path d="M29.6399 42.36L11.3199 24L29.6399 5.64L23.9999 -2.46532e-07L-0.000107861 24L23.9999 48L29.6399 42.36Z">
       </svg>
     </button>
     <div class="lightbox__content"></div>
     <button class="lightbox__next" aria-label="Média suivant">
       <svg width="30" height="48" viewBox="0 0 30 48" stroke="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0.360108 5.64L18.6801 24L0.360107 42.36L6.00011 48L30.0001 24L6.00011 3.88195e-06L0.360108 5.64Z"
-          stroke="#911C1C" />
+        <path d="M0.360108 5.64L18.6801 24L0.360107 42.36L6.00011 48L30.0001 24L6.00011 3.88195e-06L0.360108 5.64Z">
       </svg>
     </button>
   </div>
+
   <header class="header">
     <a href="index.html" class="header__logo-link" aria-label="Fisheye Home page">
-      <img src="assets/images/logo.png" class="header__logo" alt="Logo de Fisheye" />
+      <img src="assets/images/logo.png" class="header__logo" alt="Logo de Fisheye">
     </a>
   </header>
+
   <main id="main" class="main">
-    <section id="photograph-header" aria-labelledby="photograph-header" role="region" tabindex="0"
+    <section id="photographer-header" aria-labelledby="photographer-header"
       aria-label="Détails du photographe et contact"></section>
-    <section id="photograph-work" class="photograph-work" aria-label="Galerie des travaux du photographe">
-      <div class="photograph-work__sorting" aria-label="Options de tri">
-        <label for="custom-sort" class="photograph-work__sorting-label">Trier par</label>
-        <div id="custom-sort" class="custom-sort" role="listbox" aria-label="Trier les médias">
+    <section id="photographer-work" class="photographer-work" aria-label="Galerie des travaux du photographe">
+      <div class="photographer-work__sorting" aria-label="Options de tri">
+        <label id="custom-sort-label" class="photographer-work__sorting-label">Trier par</label>
+        <div id="custom-sort" class="custom-sort" role="listbox" aria-label="Trier les médias"
+          aria-labelledby="custom-sort-label">
           <button class="custom-sort__button" aria-haspopup="listbox" aria-expanded="false">
             <span class="custom-sort__button-text">Popularité</span>
             <svg class="custom-sort__button-icon" width="16" height="11" viewBox="0 0 16 11" stroke="none"
               xmlns="http://www.w3.org/2000/svg">
               <path d="M14.12 0.453125L8 6.55979L1.88 0.453125L0 2.33312L8 10.3331L16 2.33312L14.12 0.453125Z"
-                stroke="white" />
+                stroke="white">
             </svg>
           </button>
           <div class="custom-sort__options" role="menu" aria-hidden="true">
@@ -60,9 +60,11 @@
           </div>
         </div>
       </div>
-      <div class="photograph-work__container" role="list"></div>
+      <div class="photographer-work__container" role="list"></div>
     </section>
   </main>
+
+  <!-- Modale de contact -->
   <div id="contact_modal" class="contact-modal" role="dialog" aria-labelledby="contact-modal__title" aria-hidden="true">
     <div class="contact-modal__content">
       <header class="contact-modal__header">

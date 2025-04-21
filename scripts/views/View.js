@@ -1,40 +1,47 @@
-import { FactoryManager } from "../utils/FactoryManager.js";
-import { createPhotographerCard } from "./components/PhotographerCardFactory.js";
-import { createMediaCard } from "./components/MediaCardFactory.js";
-import { createPhotographerHeader } from "./components/PhotographerHeaderFactory.js";
-import { createStickyInfoBox } from "./components/StickyInfoBoxFactory.js";
-import { createLightbox } from "./components/LightboxFactory.js";
-import { createContactModal } from "./components/ContactModalFactory.js";
-import { createDropdown } from "./components/DropdownFactory.js";
+import { TemplateManager } from "../utils/TemplateManager.js";
+import { photographerCardTemplate } from "./templates/photographerCardTemplate.js";
+import { mediaCardTemplate } from "./templates/mediaCardTemplate.js";
+import { photographerHeaderTemplate } from "./templates/photographerHeaderTemplate.js";
+import { stickyInfoBoxTemplate } from "./templates/stickyInfoBoxTemplate.js";
+import { lightboxTemplate } from "./templates/lightboxTemplate.js";
+import { contactModalTemplate } from "./templates/contactModalTemplate.js";
+import { dropdownTemplate } from "./templates/dropdownTemplate.js";
 
 /**
  * Classe représentant la vue de l'application.
  * Gère l'affichage des données et les interactions utilisateur.
  */
 export class AppView {
+  /**
+   * Crée une instance unique de AppView.
+   * @returns {void}
+   */
   constructor() {
     if (AppView.instance) {
       return AppView.instance;
     }
     this.eventManager = null;
+    this.currentLightboxMedia = null; // Pour stocker le média actuel dans la lightbox
     AppView.instance = this;
 
-    const factoryManager = new FactoryManager();
+    const templateManager = new TemplateManager();
 
-    // Enregistrement des factories
-    factoryManager.registerFactory("photographerCard", createPhotographerCard);
-    factoryManager.registerFactory("mediaCard", createMediaCard);
-    factoryManager.registerFactory(
-      "createPhotographerHeader",
-      createPhotographerHeader
+    // Enregistrement des templates
+    templateManager.registerFactory(
+      "photographerCard",
+      photographerCardTemplate
     );
-    factoryManager.registerFactory("stickyInfoBox", createStickyInfoBox);
-    factoryManager.registerFactory("lightbox", createLightbox);
-    factoryManager.registerFactory("contactModal", createContactModal);
-    factoryManager.registerFactory("dropdown", createDropdown);
+    templateManager.registerFactory("mediaCard", mediaCardTemplate);
+    templateManager.registerFactory(
+      "photographerHeader",
+      photographerHeaderTemplate
+    );
+    templateManager.registerFactory("stickyInfoBox", stickyInfoBoxTemplate);
+    templateManager.registerFactory("lightbox", lightboxTemplate);
+    templateManager.registerFactory("contactModal", contactModalTemplate);
+    templateManager.registerFactory("dropdown", dropdownTemplate);
 
-    // Remplacement des appels directs par le FactoryManager
-    this.factoryManager = factoryManager;
+    this.templateManager = templateManager;
   }
 
   // Section: Méthodes de rendu
@@ -54,25 +61,61 @@ export class AppView {
   }
 
   /**
+   * Affiche la carte d'un photographe sur la page d'accueil.
+   *
+   * @param {Object} photographerInfo - Les données du photographe.
+   * @param {HTMLElement} photographersSectionElement - L'élément HTML de la section des photographes.
+   * @returns {void}
+   */
+  displayPhotographerCard(photographerInfo, photographersSectionElement) {
+    const photographerCardTemplate = this.templateManager.create(
+      "photographerCard",
+      photographerInfo
+    );
+
+    const photographerCard = photographerCardTemplate.getCardDOM();
+    photographersSectionElement.appendChild(photographerCard);
+
+    // Ajout des événements via l'eventManager
+    const photographerCardSectionHeader = photographerCard.querySelector(
+      ".photographer-section__header"
+    );
+
+    this.eventManager.addEvent(photographerCardSectionHeader, "click", () => {
+      window.location.href = `photographer.html?id=${photographerInfo.id}`;
+    });
+    this.eventManager.addEvent(
+      photographerCardSectionHeader,
+      "keydown",
+      (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          window.location.href = `photographer.html?id=${photographerInfo.id}`;
+        }
+      }
+    );
+  }
+
+  /**
    * Affiche la bannière d'un photographe sur sa page de détails.
    *
    * @param {Object} photographerInfo - Les données du photographe.
    * @returns {void}
    */
   displayPhotographerHeader(photographerInfo) {
-    const photographerHeaderElement =
-      document.getElementById("photograph-header");
+    const photographerHeaderElement = document.getElementById(
+      "photographer-header"
+    );
     photographerHeaderElement.innerHTML = "";
 
-    this.factoryManager.create("createPhotographerHeader", {
-      photographerInfo: photographerInfo,
-      photographerHeaderElement: photographerHeaderElement,
+    const headerTemplate = this.templateManager.create("photographerHeader", {
+      photographerInfo,
     });
+    photographerHeaderElement.appendChild(headerTemplate.getHeaderDOM());
 
     const contactButtonElement = photographerHeaderElement.querySelector(
-      ".photograph-header__contact-button"
+      ".photographer-header__contact-button"
     );
-    contactButtonElement.addEventListener("click", () => {
+    this.eventManager.addEvent(contactButtonElement, "click", () => {
       this.showContactModal(photographerInfo.name);
     });
   }
@@ -85,11 +128,11 @@ export class AppView {
    * @returns {void}
    */
   displayStickyInfoBox(photographerPrice, photographerTotalLikes) {
-    const stickyInfoBoxElement = this.factoryManager.create("stickyInfoBox", {
+    const stickyInfoBoxTemplate = this.templateManager.create("stickyInfoBox", {
       photographerPrice,
       photographerTotalLikes,
     });
-    document.body.appendChild(stickyInfoBoxElement);
+    document.body.appendChild(stickyInfoBoxTemplate.getStickyInfoBoxDOM());
   }
 
   /**
@@ -101,14 +144,15 @@ export class AppView {
    */
   displayPhotographerMedia(mediaList, photographerInfo) {
     const worksContainerElement = document.querySelector(
-      ".photograph-work__container"
+      ".photographer-work__container"
     );
     worksContainerElement.innerHTML = ""; // Vider le conteneur avant d'ajouter les nouveaux médias
     mediaList.forEach((mediaData) => {
-      const mediaCardElement = this.factoryManager.create(
+      const mediaCardTemplate = this.templateManager.create(
         "mediaCard",
         mediaData
       );
+      const mediaCardElement = mediaCardTemplate.getMediaCardDOM();
 
       worksContainerElement.appendChild(mediaCardElement); // Ajouter le média à la section des travaux
       // Ajouter un gestionnaire d'événements pour les likes
@@ -156,7 +200,7 @@ export class AppView {
   }
 
   /**
-   * Ajoute un événement pour gérer les likes sur un média via le contrôleur.
+   * Ajoute un événement pour gérer les likes sur un média
    *
    * @param {Object} medium - Les données du média.
    * @param {HTMLElement} mediaCard - L'élément HTML de la carte du média.
@@ -165,20 +209,31 @@ export class AppView {
    */
   attachLikeEvent(medium, mediaCard, photographer) {
     const likeButton = mediaCard.querySelector(
-      ".photograph-work__likes-container"
+      ".photographer-work__likes-container"
     );
     const mediaLikesContainer = likeButton.querySelector(
-      ".photograph-work__likes"
+      ".photographer-work__likes"
     );
-    const heartIcon = mediaCard.querySelector(".photograph-work__heart-icon");
+    const heartIcon = mediaCard.querySelector(".photographer-work__heart-icon");
 
     this.eventManager.addEvent(likeButton, "click", () => {
       this.eventManager.trigger("toggleLike", {
         medium,
         mediaLikesContainer,
         heartIcon,
-        photographer, // Ajout du photographe
+        photographer,
       });
+    });
+
+    this.eventManager.addEvent(likeButton, "keydown", (event) => {
+      if (event.key === "Enter") {
+        this.eventManager.trigger("toggleLike", {
+          medium,
+          mediaLikesContainer,
+          heartIcon,
+          photographer,
+        });
+      }
     });
   }
 
@@ -209,11 +264,11 @@ export class AppView {
     modal.style.display = "flex";
     modal.setAttribute("aria-hidden", "false");
     modalTitle.textContent = `Contactez-moi ${photographerName}`;
-    this.eventManager.attachModalEvents();
     const firstInput = modal.querySelector("input, textarea, select");
     if (firstInput) {
       firstInput.focus();
     }
+    this.eventManager.attachModalEvents();
   }
 
   /**
@@ -224,17 +279,20 @@ export class AppView {
   hideContactModal() {
     const modal = document.getElementById("contact_modal");
     modal.style.display = "none";
+    document.querySelector(".photographer-header__contact-button").focus();
   }
 
   displayContactModal(photographerName) {
-    const contactModalElement = this.factoryManager.create(
-      "contactModal",
-      photographerName
-    );
+    const contactModalTemplate = this.templateManager.create("contactModal", {
+      photographerName,
+    });
+    const contactModalElement = contactModalTemplate.getModalDOM();
     document.body.appendChild(contactModalElement);
 
-    const closeModalButton = contactModalElement.querySelector(".close-modal");
-    closeModalButton.addEventListener("click", () => {
+    const closeModalButton = contactModalElement.querySelector(
+      ".contact-modal__close"
+    );
+    this.eventManager.addEvent(closeModalButton, "click", () => {
       contactModalElement.style.display = "none";
       contactModalElement.setAttribute("aria-hidden", "true");
     });
@@ -244,11 +302,12 @@ export class AppView {
   }
 
   displayDropdown(options, defaultOption, onChangeCallback) {
-    const dropdownElement = this.factoryManager.create("dropdown", {
+    const dropdownTemplate = this.templateManager.create("dropdown", {
       options,
       defaultOption,
       onChangeCallback,
     });
+    const dropdownElement = dropdownTemplate.getDropdownDOM();
     const dropdownContainer = document.querySelector(".dropdown-container");
     dropdownContainer.innerHTML = "";
     dropdownContainer.appendChild(dropdownElement);
@@ -281,6 +340,8 @@ export class AppView {
    * @returns {void}
    */
   renderLightboxMedia(mediaData) {
+    this.currentLightboxMedia = mediaData; // Stocker le média actuel pour la navigation dans la lightbox
+
     const lightbox = document.getElementById("lightbox");
     if (!lightbox) {
       console.error("Lightbox introuvable dans le DOM.");
@@ -294,100 +355,49 @@ export class AppView {
     }
 
     lightboxContainer.innerHTML = ""; // Vider le contenu existant
-    const lightboxElement = this.factoryManager.create("lightbox", mediaData);
-    lightboxContainer.appendChild(lightboxElement);
+    const lightboxTemplate = this.templateManager.create("lightbox", mediaData);
+    lightboxContainer.appendChild(lightboxTemplate.getLightboxDOM());
 
     lightbox.style.display = "flex";
     lightbox.removeAttribute("inert"); // Supprime l'attribut inert pour rendre la lightbox interactive
     lightbox.setAttribute("aria-hidden", "false"); // Rend la lightbox visible pour les technologies d'assistance
 
-    // Déplacer le focus sur le premier élément de la lightbox
-    const closeButton = lightbox.querySelector(".lightbox__close");
-    if (closeButton) {
-      closeButton.focus();
-    }
-  }
-
-  /**
-   * Ferme la lightbox.
-   *
-   * @returns {void}
-   */
-  closeLightbox() {
-    const lightbox = document.getElementById("lightbox");
-    if (!lightbox) {
-      console.error("Lightbox introuvable dans le DOM.");
-      return;
-    }
-
-    // Masquer la lightbox
-    lightbox.style.display = "none";
-    lightbox.setAttribute("inert", ""); // Ajoute l'attribut inert pour désactiver la lightbox
-    lightbox.setAttribute("aria-hidden", "true"); // Masque la lightbox pour les technologies d'assistance
-
-    // Déplacer le focus vers un élément valide en dehors de la lightbox
-    const mainContent = document.getElementById("main");
-    if (mainContent) {
-      mainContent.focus();
-    }
+    this.toggleLightboxFocus(); // Restreindre le focus à la lightbox
   }
 
   /**
    * Gère le focus pour restreindre la navigation au clavier aux éléments de la lightbox.
    *
-   * @param {boolean} isOpen - Indique si la lightbox est ouverte.
    * @returns {void}
    */
-  toggleLightboxFocus(isOpen) {
+  toggleLightboxFocus() {
     const lightboxElement = document.getElementById("lightbox");
-    const focusableElements = lightboxElement.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
 
-    if (isOpen) {
-      // Sauvegarder les éléments focusables en dehors de la lightbox
-      this.previousFocusableElements = Array.from(
-        document.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )
-      ).filter((el) => !lightboxElement.contains(el));
+    // Ajouter un gestionnaire pour boucler le focus dans la lightbox
+    const firstFocusable = lightboxElement.querySelector(".lightbox__next");
+    const lastFocusable = lightboxElement.querySelector(".lightbox__close");
 
-      // Désactiver le focus pour les éléments en dehors de la lightbox
-      this.previousFocusableElements.forEach((el) => {
-        el.setAttribute("tabindex", "-1");
-      });
-
-      // Ajouter un gestionnaire pour boucler le focus dans la lightbox
-      const firstFocusable = focusableElements[0];
-      const lastFocusable = focusableElements[focusableElements.length - 1];
-
-      lightboxElement.addEventListener("keydown", (event) => {
-        if (event.key === "Tab") {
-          if (event.shiftKey) {
-            // Si Shift + Tab, revenir au dernier élément si on est sur le premier
-            if (document.activeElement === firstFocusable) {
-              event.preventDefault();
-              lastFocusable.focus();
-            }
-          } else {
-            // Si Tab, aller au premier élément si on est sur le dernier
-            if (document.activeElement === lastFocusable) {
-              event.preventDefault();
-              firstFocusable.focus();
-            }
+    this.eventManager.addEvent(lightboxElement, "keydown", (event) => {
+      if (event.key === "Tab") {
+        if (event.shiftKey) {
+          // Si Shift + Tab, revenir au premier élément si on est sur le dernier
+          if (document.activeElement === lastFocusable) {
+            event.preventDefault();
+            firstFocusable.focus();
+          }
+        } else {
+          // Si Tab, aller au dernier élément si on est sur le premier
+          if (document.activeElement === firstFocusable) {
+            event.preventDefault();
+            lastFocusable.focus();
           }
         }
-      });
-
-      // Mettre le focus sur le premier élément focusable
-      firstFocusable.focus();
-    } else {
-      // Réactiver le focus pour les éléments en dehors de la lightbox
-      if (this.previousFocusableElements) {
-        this.previousFocusableElements.forEach((el) => {
-          el.removeAttribute("tabindex");
-        });
       }
+    });
+
+    // Mettre le focus sur le bouton .lightbox__next
+    if (firstFocusable) {
+      firstFocusable.focus();
     }
   }
 }

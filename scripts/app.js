@@ -2,7 +2,6 @@ import { AppModel } from "./models/Model.js";
 import { AppView } from "./views/View.js";
 import { AppController } from "./controller/Controller.js";
 import { EventManager } from "./utils/EventManager.js";
-
 // Initialisation des singletons
 const app = new AppController(
   new AppModel(),
@@ -11,14 +10,12 @@ const app = new AppController(
 );
 
 // Détection de la page actuelle
-const CURRENT_PAGE = window.location.pathname;
+const CURRENT_PAGE = window.location.pathname.replace("/Fisheye", "");
 
 /**
- * Exécute le code après le chargement complet du DOM.
- *
- * @event DOMContentLoaded
+ * Initialise l'application.
  */
-document.addEventListener("DOMContentLoaded", () => {
+function initializeApp() {
   try {
     if (CURRENT_PAGE.includes("index.html") || CURRENT_PAGE === "/") {
       app.renderHomePage();
@@ -35,4 +32,11 @@ document.addEventListener("DOMContentLoaded", () => {
       error.message
     );
   }
+}
+
+/**
+ * Exécute le code après le chargement complet du DOM.
+ */
+app.eventManager.addEvent(document, "DOMContentLoaded", () => {
+  initializeApp();
 });

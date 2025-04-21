@@ -58,6 +58,13 @@ export class EventManager {
     }
   }
 
+  /**
+   * Attache les événements de tri au menu déroulant.
+   *
+   * @param {Array} media - La liste des médias à trier.
+   * @param {Object} photographer - Les informations du photographe.
+   * @returns {void}
+   */
   attachSortEvent(media, photographer) {
     const customSort = document.querySelector("#custom-sort");
     if (!customSort) {
@@ -99,6 +106,10 @@ export class EventManager {
         selectedValue
       );
       this.view.displayPhotographerMedia(sortedMedia, photographer);
+
+      document
+        .querySelector(".photographer-work__container :nth-child(1) .media")
+        .focus(); // Met le focus sur le premier média après le tri
 
       toggleDropdown(false); // Ferme le menu après la sélection
     };
@@ -157,7 +168,7 @@ export class EventManager {
       });
     });
 
-    document.addEventListener("click", (event) => {
+    this.addEvent(document, "click", (event) => {
       if (!customSort.contains(event.target)) {
         toggleDropdown(false);
       }
@@ -166,6 +177,11 @@ export class EventManager {
     initializeOptions(); // Appel de l'initialisation
   }
 
+  /**
+   * Attache les événements de la modale de contact.
+   *
+   * @returns {void}
+   * */
   attachModalEvents() {
     const modal = document.getElementById("contact_modal");
     if (!modal) {
@@ -175,38 +191,51 @@ export class EventManager {
     const closeButton = modal.querySelector(".contact-modal__close-button");
     const contactForm = document.getElementById("contact_form");
     const contactButton = document.querySelector(
-      ".photograph-header__contact-button"
+      ".photographer-header__contact-button"
     );
 
     if (!closeButton || !contactForm || !contactButton) {
+      console.log(closeButton, contactForm, contactButton);
       console.error("Éléments de la modale de contact manquants.");
       return;
     }
 
-    this.addEvent(closeButton, "click", () => {
+    this.addEvent(closeButton, "click", (e) => {
+      e.stopPropagation(); // Empêche la propagation de l'événement
+      e.preventDefault(); // Empêche le comportement par défaut
       this.view.hideContactModal();
     });
 
     this.addEvent(window, "keydown", (event) => {
       if (event.key === "Escape" && modal.style.display === "flex") {
+        event.stopPropagation(); // Empêche la propagation de l'événement
+        event.preventDefault(); // Empêche le comportement par défaut
         this.view.hideContactModal();
       } else if (
         event.key === "Enter" &&
         closeButton === document.activeElement
       ) {
+        event.stopPropagation(); // Empêche la propagation de l'événement
+        event.preventDefault(); // Empêche le comportement par défaut
         this.view.hideContactModal();
       }
     });
 
     this.addEvent(contactForm, "submit", (event) => {
-      event.preventDefault();
       const formData = new FormData(contactForm);
       const formValues = Object.fromEntries(formData.entries());
       console.log("Formulaire soumis :", formValues);
+      event.stopPropagation(); // Empêche la propagation de l'événement
+      event.preventDefault(); // Empêche le comportement par défaut
       this.view.hideContactModal();
     });
   }
 
+  /**
+   * Attache les événements de la lightbox.
+   *
+   * @returns {void}
+   * */
   attachLightboxEvents() {
     const lightbox = document.getElementById("lightbox");
     if (!lightbox) {
@@ -226,60 +255,8 @@ export class EventManager {
     this.addEvent(lightbox.querySelector(".lightbox__next"), "click", () => {
       this.trigger("showNextMedia");
     });
-  }
 
-  /**
-   * Gère les événements globaux pour la lightbox.
-   *
-   * @param {HTMLElement} lightboxElement - L'élément HTML de la lightbox.
-   * @param {Object} controller - Le contrôleur pour gérer les actions de la lightbox.
-   */
-  attachLightboxGlobalEvents(lightboxElement, controller) {
-    const handleKeydown = (event) => {
-      switch (event.key) {
-        case "Escape":
-          controller.closeMediaLightbox();
-          break;
-        case "ArrowRight":
-          controller.showNextMedia();
-          break;
-        case "ArrowLeft":
-          controller.showPreviousMedia();
-          break;
-      }
-    };
-
-    lightboxElement.addEventListener("keydown", handleKeydown);
-  }
-
-  /**
-   * Centralise les événements globaux pour la lightbox.
-   *
-   * @param {HTMLElement} lightboxElement - L'élément HTML de la lightbox.
-   */
-  initializeLightboxEvents(lightboxElement) {
-    const closeButton = lightboxElement.querySelector(".lightbox__close");
-    const nextButton = lightboxElement.querySelector(".lightbox__next");
-    const prevButton = lightboxElement.querySelector(".lightbox__prev");
-
-    if (!closeButton || !nextButton || !prevButton) {
-      console.error("Éléments de la lightbox manquants.");
-      return;
-    }
-
-    closeButton.addEventListener("click", () => {
-      this.trigger("closeLightbox");
-    });
-
-    nextButton.addEventListener("click", () => {
-      this.trigger("showNextMedia");
-    });
-
-    prevButton.addEventListener("click", () => {
-      this.trigger("showPreviousMedia");
-    });
-
-    lightboxElement.addEventListener("keydown", (event) => {
+    this.addEvent(lightbox, "keydown", (event) => {
       switch (event.key) {
         case "Escape":
           this.trigger("closeLightbox");
@@ -305,12 +282,14 @@ export class EventManager {
     let lightbox = document.getElementById("lightbox");
 
     if (!lightbox) {
-      // Si la lightbox n'existe pas, la créer via la vue
-      this.view.renderLightboxMedia(mediaData);
-      lightbox = document.getElementById("lightbox");
+      console.error("Lightbox introuvable dans le DOM.");
+      return;
     }
 
-    if (!this.mediaList || this.mediaList.length === 0) {
+    if (
+      !this.controller.model.mediaList ||
+      this.controller.model.mediaList.length === 0
+    ) {
       console.error("La liste des médias n'est pas définie ou vide.");
       return;
     }
@@ -318,9 +297,9 @@ export class EventManager {
     // Afficher le média dans la lightbox
     this.view.renderLightboxMedia(mediaData);
 
-    this.currentMediaIndex = this.mediaList.findIndex(
+    this.currentMediaIndex = this.controller.model.mediaList.findIndex(
       (media) => media.id === mediaData.id
-    );
+    ); // Mettre à jour l'index du média actuel
   }
 
   /**
@@ -331,17 +310,24 @@ export class EventManager {
   closeMediaLightbox() {
     const lightbox = document.getElementById("lightbox");
 
-    // Vérification si la lightbox existe dans le DOM
     if (!lightbox) {
-      console.error(
-        "Lightbox introuvable dans le DOM. Assurez-vous que l'élément HTML de la lightbox est correctement défini."
-      );
+      console.error("Lightbox introuvable dans le DOM. ");
       return;
     }
 
+    // Mettre le focus sur le .photographer-work__container[this.currentMediaIndex]
+    document
+      .querySelector(
+        ".photographer-work__container :nth-child(" +
+          (this.currentMediaIndex + 1) +
+          ") .media"
+      )
+      .focus(); // Met le focus sur le média actuel
+
     // Masquer la lightbox
+    lightbox.setAttribute("aria-hidden", "true"); // Met à jour l'attribut aria-hidden
     lightbox.style.display = "none";
-    lightbox.setAttribute("aria-hidden", "true");
+    lightbox.setAttribute("inert", ""); // Ajoute l'attribut inert pour désactiver la lightbox
   }
 
   /**
@@ -372,7 +358,7 @@ export class EventManager {
    * @param {Function} openModal - La fonction pour ouvrir la modale.
    */
   attachContactButtonEvent(button, openModal) {
-    button.addEventListener("click", openModal);
+    this.addEvent(button, "click", openModal);
   }
 
   /**
@@ -381,16 +367,19 @@ export class EventManager {
    * @returns {void}
    */
   showNextMedia() {
-    if (this.currentMediaIndex === undefined || this.mediaList.length === 0) {
+    if (
+      this.currentMediaIndex === undefined ||
+      this.controller.model.mediaList.length === 0
+    ) {
       return;
     }
 
     // Calculer l'index du média suivant
     this.currentMediaIndex =
-      (this.currentMediaIndex + 1) % this.mediaList.length;
+      (this.currentMediaIndex + 1) % this.controller.model.mediaList.length;
 
     // Afficher le média suivant
-    const nextMedia = this.mediaList[this.currentMediaIndex];
+    const nextMedia = this.controller.model.mediaList[this.currentMediaIndex];
     this.view.renderLightboxMedia(nextMedia);
   }
 
@@ -400,17 +389,20 @@ export class EventManager {
    * @returns {void}
    */
   showPreviousMedia() {
-    if (this.currentMediaIndex === undefined || this.mediaList.length === 0) {
+    if (
+      this.currentMediaIndex === undefined ||
+      this.controller.model.mediaList.length === 0
+    ) {
       return;
     }
 
     // Calculer l'index du média précédent
     this.currentMediaIndex =
-      (this.currentMediaIndex - 1 + this.mediaList.length) %
-      this.mediaList.length;
+      (this.currentMediaIndex - 1 + this.controller.model.mediaList.length) %
+      this.controller.model.mediaList.length;
 
     // Afficher le média précédent
-    const prevMedia = this.mediaList[this.currentMediaIndex];
+    const prevMedia = this.controller.model.mediaList[this.currentMediaIndex];
     this.view.renderLightboxMedia(prevMedia);
   }
 
@@ -422,9 +414,9 @@ export class EventManager {
    */
   handleLikeMedia(data) {
     const { mediaCard } = data;
-    const mediaId = mediaCard.dataset.id; // Supposons que l'ID du média est stocké dans un attribut data-id
+    const mediaId = mediaCard.dataset.id;
 
-    const medium = this.mediaList.find(
+    const medium = this.controller.model.mediaList.find(
       (media) => media.id === parseInt(mediaId)
     );
     if (!medium) {

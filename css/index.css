@@ -4,17 +4,9 @@
     format("truetype-variations");
   font-weight: 100 900;
 }
-
 :root {
   --color-primary: #901c1c;
   --color-secondary: #d3573c;
-  --color-light: #fafafa;
-  --color-dark: #312e2e;
-  --color-error: #d9534f;
-  --color-error-bg: #f8d7da;
-  --color-error-border: #f5c6cb;
-  --color-neutral: #525252;
-  --color-white: #ffffff;
   --color-black: #000000;
   --color-gray: #757575;
   --color-shadow: rgba(0, 0, 0, 0.1);
@@ -38,9 +30,11 @@
   height: 90px;
   padding-top: 42px;
 }
+
 .header__logo-link {
   margin-left: 100px;
 }
+
 .header__logo {
   height: 50px;
 }
@@ -50,6 +44,7 @@
   outline-offset: 5px;
   border-radius: 5px;
 }
+
 .header__title {
   color: var(--color-primary);
   margin-right: 100px;
@@ -72,10 +67,9 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  grid-template-areas:
-    "photographer1 photographer2 photographer3"
-    "photographer4 photographer5 photographer6";
+  grid-template-areas: "photographer1 photographer2 photographer3" "photographer4 photographer5 photographer6";
   row-gap: 75px;
+  -moz-column-gap: 20px;
   column-gap: 20px;
   width: 100%;
 }
@@ -97,9 +91,11 @@
   overflow: hidden;
   position: relative;
 }
+
 .photographer-section__img {
   width: 526px;
   height: 358px;
+  -o-object-fit: contain;
   object-fit: contain;
   transform: translate(-50%, -42%);
   position: absolute;
@@ -116,6 +112,7 @@
   text-align: center;
   margin-top: 20px;
 }
+
 .photographer-section__article .photographer-section__location {
   color: var(--color-primary);
   font-weight: 400;
@@ -124,6 +121,7 @@
   letter-spacing: 0;
   text-align: center;
 }
+
 .photographer-section__article .photographer-section__tagline {
   color: var(--color-black);
   font-weight: 400;
@@ -133,6 +131,7 @@
   text-align: center;
   margin-top: 3px;
 }
+
 .photographer-section__article .photographer-section__price {
   color: var(--color-gray);
   font-weight: 400;
@@ -147,29 +146,19 @@
 .photographer-card {
   cursor: pointer;
 }
+
 .photographer-card:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
 .media {
   cursor: pointer;
 }
+
 .media:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-}
-
-.error-message {
-  color: var(--color-error);
-  background-color: var(--color-error-bg);
-  border: 1px solid var(--color-error-border);
-  padding: 15px;
-  margin: 20px auto;
-  text-align: center;
-  font-size: 1.2em;
-  border-radius: 5px;
-  max-width: 600px;
-  box-shadow: 0 2px 4px var(--color-shadow);
 }
 
 .submit-contact-button {
