@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 
 <head>
   <meta charset="utf-8">
@@ -65,25 +65,33 @@
   </main>
 
   <!-- Modale de contact -->
-  <div id="contact_modal" class="contact-modal" role="dialog" aria-labelledby="contact-modal__title" aria-hidden="true">
+  <div id="contact_modal" class="contact-modal" aria-hidden="true" role="dialog">
     <div class="contact-modal__content">
       <header class="contact-modal__header">
-        <h2 id="contact-modal__title" class="contact-modal__photographer-name">Contactez-moi</h2>
-        <img src="assets/icons/close.svg" class="contact-modal__close-button" alt="Fermer le formulaire" role="button"
-          tabindex="0">
+        <h2 id="contact-modal__title" class="contact-modal__photographer-name"></h2>
+        <img src="assets/icons/close.svg" class="contact-modal__close-button" aria-label="Fermer le formulaire"
+          role="button" tabindex="0" alt="">
       </header>
-      <form id="contact_form" class="contact-modal__form" method="POST" aria-label="Formulaire de contact">
+      <form id="contact_form" class="contact-modal__form">
         <div class="contact-modal__form-group">
-          <label class="contact-modal__label">Prénom</label>
-          <input type="text" name="prenom" id="prenom" class="contact-modal__input">
-          <label class="contact-modal__label">Nom</label>
-          <input type="text" name="nom" id="nom" class="contact-modal__input">
-          <label class="contact-modal__label">Email</label>
-          <input type="email" name="email" id="email" class="contact-modal__input">
-          <label class="contact-modal__label">Votre message</label>
-          <textarea name="message" id="message" rows="5" class="contact-modal__textarea"></textarea>
+          <label for="first-name" class="contact-modal__label">Prénom</label>
+          <input type="text" id="first-name" name="first-name" class="contact-modal__input" required
+            aria-label="Prénom">
         </div>
-        <button class="contact-modal__submit-button">Envoyer</button>
+        <div class="contact-modal__form-group">
+          <label for="last-name" class="contact-modal__label">Nom</label>
+          <input type="text" id="last-name" name="last-name" class="contact-modal__input" required aria-label="Nom">
+        </div>
+        <div class="contact-modal__form-group">
+          <label for="email" class="contact-modal__label">Email</label>
+          <input type="email" id="email" name="email" class="contact-modal__input" required aria-label="Email">
+        </div>
+        <div class="contact-modal__form-group">
+          <label for="message" class="contact-modal__label">Votre message</label>
+          <textarea id="message" name="message" rows="5" class="contact-modal__textarea" required
+            aria-label="Votre message"></textarea>
+        </div>
+        <button type="submit" class="contact-modal__submit-button" aria-label="Envoyer le formulaire">Envoyer</button>
       </form>
     </div>
   </div>

@@ -10,7 +10,7 @@ const app = new AppController(
 );
 
 // Détection de la page actuelle
-const CURRENT_PAGE = window.location.pathname.replace("/Fisheye", "");
+const CURRENT_PAGE = window.location.pathname;
 
 /**
  * Initialise l'application.

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+  <!-- Page d'accueil -->
+  <url>
+    <loc>https://fisheye.maximenardelli.fr/index.html</loc>
+    <lastmod>2025-04-21T12:34:01+00:00</lastmod>
+    <changefreq>never</changefreq>
+  </url>
+
+  <!-- Pages dynamiques des photographes -->
+  <url>
+    <loc>https://fisheye.maximenardelli.fr/photographer.html?id=243</loc>
+    <lastmod>2025-04-21T12:34:01+00:00</lastmod>
+    <changefreq>never</changefreq>
+  </url>
+  <url>
+    <loc>https://fisheye.maximenardelli.fr/photographer.html?id=930</loc>
+    <lastmod>2025-04-21T12:34:01+00:00</lastmod>
+    <changefreq>never</changefreq>
+  </url>
+  <url>
+    <loc>https://fisheye.maximenardelli.fr/photographer.html?id=82</loc>
+    <lastmod>2025-04-21T12:34:01+00:00</lastmod>
+    <changefreq>never</changefreq>
+  </url>
+  <url>
+    <loc>https://fisheye.maximenardelli.fr/photographer.html?id=527</loc>
+    <lastmod>2025-04-21T12:34:01+00:00</lastmod>
+    <changefreq>never</changefreq>
+  </url>
+  <url>
+    <loc>https://fisheye.maximenardelli.fr/photographer.html?id=925</loc>
+    <lastmod>2025-04-21T12:34:01+00:00</lastmod>
+    <changefreq>never</changefreq>
+  </url>
+  <url>
+    <loc>https://fisheye.maximenardelli.fr/photographer.html?id=195</loc>
+    <lastmod>2025-04-21T12:34:01+00:00</lastmod>
+    <changefreq>never</changefreq>
+  </url>
+</urlset>

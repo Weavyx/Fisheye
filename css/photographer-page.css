@@ -175,6 +175,9 @@
   border-radius: 100%;
   overflow: hidden;
   position: relative;
+  -webkit-mask-image: linear-gradient(to bottom, black 97%, transparent);
+  mask-image: linear-gradient(to bottom, black 97%, transparent);
+  box-shadow: 0px 0px 10px var(--color-shadow);
 }
 
 .photographer-header__right img {
@@ -185,7 +188,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -42%);
 }
 
 /* Photograph Work */
@@ -357,7 +360,6 @@
   flex-direction: column;
   width: 100%;
   align-items: self-start;
-  margin-bottom: 26px;
 }
 
 .contact-modal__label {
@@ -402,6 +404,7 @@
   line-height: 69px;
   letter-spacing: 0%;
   text-align: center;
+  margin-top: 26px;
 }
 
 .contact-modal__submit-button:focus,

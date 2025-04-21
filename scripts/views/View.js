@@ -4,7 +4,6 @@ import { mediaCardTemplate } from "./templates/mediaCardTemplate.js";
 import { photographerHeaderTemplate } from "./templates/photographerHeaderTemplate.js";
 import { stickyInfoBoxTemplate } from "./templates/stickyInfoBoxTemplate.js";
 import { lightboxTemplate } from "./templates/lightboxTemplate.js";
-import { contactModalTemplate } from "./templates/contactModalTemplate.js";
 import { dropdownTemplate } from "./templates/dropdownTemplate.js";
 
 /**
@@ -38,7 +37,6 @@ export class AppView {
     );
     templateManager.registerFactory("stickyInfoBox", stickyInfoBoxTemplate);
     templateManager.registerFactory("lightbox", lightboxTemplate);
-    templateManager.registerFactory("contactModal", contactModalTemplate);
     templateManager.registerFactory("dropdown", dropdownTemplate);
 
     this.templateManager = templateManager;
@@ -115,8 +113,16 @@ export class AppView {
     const contactButtonElement = photographerHeaderElement.querySelector(
       ".photographer-header__contact-button"
     );
+
     this.eventManager.addEvent(contactButtonElement, "click", () => {
       this.showContactModal(photographerInfo.name);
+    });
+
+    // Pouvoir ouvirr la modale de contact avec entrée et la touche espace
+    this.eventManager.addEvent(contactButtonElement, "keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        this.showContactModal(photographerInfo.name);
+      }
     });
   }
 
@@ -260,15 +266,21 @@ export class AppView {
     const modalTitle = document.querySelector(
       ".contact-modal__photographer-name"
     );
+
     const modal = document.getElementById("contact_modal");
     modal.style.display = "flex";
     modal.setAttribute("aria-hidden", "false");
+
     modalTitle.textContent = `Contactez-moi ${photographerName}`;
+
     const firstInput = modal.querySelector("input, textarea, select");
+
     if (firstInput) {
       firstInput.focus();
     }
+
     this.eventManager.attachModalEvents();
+    this.toggleContactModalFocus(); // Restreindre le focus à la modale
   }
 
   /**
@@ -282,23 +294,38 @@ export class AppView {
     document.querySelector(".photographer-header__contact-button").focus();
   }
 
-  displayContactModal(photographerName) {
-    const contactModalTemplate = this.templateManager.create("contactModal", {
-      photographerName,
-    });
-    const contactModalElement = contactModalTemplate.getModalDOM();
-    document.body.appendChild(contactModalElement);
+  /**
+   * Gère le focus pour restreindre la navigation au clavier aux éléments de la modale de contact.
+   *
+   * @returns {void}
+   */
+  toggleContactModalFocus() {
+    const modalElement = document.getElementById("contact_modal");
 
-    const closeModalButton = contactModalElement.querySelector(
-      ".contact-modal__close"
+    // Ajouter un gestionnaire pour boucler le focus dans la modale
+    const focusableElements = modalElement.querySelectorAll(
+      "input, textarea, select, button, [tabindex]:not([tabindex='-1'])"
     );
-    this.eventManager.addEvent(closeModalButton, "click", () => {
-      contactModalElement.style.display = "none";
-      contactModalElement.setAttribute("aria-hidden", "true");
-    });
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
 
-    contactModalElement.style.display = "flex";
-    contactModalElement.setAttribute("aria-hidden", "false");
+    this.eventManager.addEvent(modalElement, "keydown", (event) => {
+      if (event.key === "Tab") {
+        if (event.shiftKey) {
+          // Si Shift + Tab, revenir au premier élément si on est sur le dernier
+          if (document.activeElement === firstFocusable) {
+            event.preventDefault();
+            lastFocusable.focus();
+          }
+        } else {
+          // Si Tab, aller au dernier élément si on est sur le premier
+          if (document.activeElement === lastFocusable) {
+            event.preventDefault();
+            firstFocusable.focus();
+          }
+        }
+      }
+    });
   }
 
   displayDropdown(options, defaultOption, onChangeCallback) {

@@ -85,6 +85,8 @@ export class AppController {
             this.view.displayPhotographerMedia(mediaList, photographerInfo);
             this.eventManager.attachSortEvent(mediaList, photographerInfo);
 
+            document.title = `${photographerInfo.name} – ${photographerInfo.tagline} | Fisheye`;
+
             this.eventManager.attachLightboxEvents(
               document.querySelector(".lightbox")
             );

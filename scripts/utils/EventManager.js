@@ -352,16 +352,6 @@ export class EventManager {
   }
 
   /**
-   * Attache un événement pour ouvrir le formulaire de contact.
-   *
-   * @param {HTMLElement} button - Le bouton de contact.
-   * @param {Function} openModal - La fonction pour ouvrir la modale.
-   */
-  attachContactButtonEvent(button, openModal) {
-    this.addEvent(button, "click", openModal);
-  }
-
-  /**
    * Affiche le média suivant dans la lightbox.
    *
    * @returns {void}
