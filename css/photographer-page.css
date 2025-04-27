@@ -7,6 +7,7 @@
 :root {
   --color-primary: #901c1c;
   --color-secondary: #db8876;
+  --text--primary: #d3573c;
   --color-light: #fafafa;
   --color-dark: #312e2e;
   --color-neutral: #525252;
@@ -125,7 +126,7 @@
   font-size: 64px;
   line-height: 83px;
   letter-spacing: 0;
-  color: var(--color-secondary);
+  color: var(--text--primary);
 }
 
 .photographer-header__location {
@@ -228,7 +229,7 @@
 .photographer-work__container {
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   gap: 95px;
   row-gap: 20px;
