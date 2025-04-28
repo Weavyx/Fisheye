@@ -83,6 +83,10 @@
   flex-flow: column nowrap;
 }
 
+.photographer-section__header {
+  cursor: pointer;
+}
+
 .photographer-section__article .photographer-section__frame {
   height: 200px;
   width: 200px;
