@@ -1,11 +1,54 @@
 {
+  "name": "fisheye",
+  "version": "1.0.0",
+  "description": "Plateforme web accessible pour photographes indépendants. Application web modulaire avec design patterns JavaScript et standards WCAG 2.1.",
+  "author": {
+    "name": "Maxime Nardelli (@Weavyx)",
+    "email": "maxime.nardelli@gmail.com",
+    "url": "https://www.maximenardelli.fr"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Weavyx/Fisheye.git"
+  },
+  "keywords": [
+    "photography",
+    "accessibility",
+    "wcag",
+    "javascript",
+    "design-patterns",
+    "responsive",
+    "web-development",
+    "portfolio"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not IE 11"
+  ],
+  "main": "index.html",
+  "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write \"**/*.{js,css,html,json}\""
+  },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
     "eslint": "^9.25.1",
-    "globals": "^16.0.0"
+    "globals": "^16.0.0",
+    "prettier": "^3.1.0"
   },
-  "scripts": {
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --fix"
+  "optionalDependencies": {
+    "prettier-plugin-organize-imports": "^3.2.4"
+  },
+  "bugs": {
+    "url": "https://github.com/Weavyx/Fisheye/issues",
+    "email": "maxime.nardelli@gmail.com"
   }
 }
