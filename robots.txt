@@ -1,4 +1,30 @@
+# Fisheye - Photography Portfolio
+# robots.txt configuration
+
+# Allow all bots
 User-agent: *
 Allow: /
 
+# Disallow sensitive directories and files
+Disallow: /node_modules/
+Disallow: /data/
+Disallow: /*.json
+Disallow: /*.mjs
+Disallow: /.git
+Disallow: /.htaccess
+
+# Specific rules for common search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Sitemap location
 Sitemap: https://fisheye.maximenardelli.fr/sitemap.xml
